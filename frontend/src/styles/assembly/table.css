@@ -1,0 +1,65 @@
+.assembly-table-wrapper {
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.assembly-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.assembly-table thead {
+    background: #f5f5f5;
+}
+
+.assembly-table th,
+.assembly-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ececec;
+}
+
+.assembly-table th {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.assembly-table td {
+    font-size: 14px;
+}
+
+.assembly-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.assembly-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.assembly-btn.log {
+    background: #2563eb;
+}
+
+.assembly-btn.complete {
+    background: #16a34a;
+}
+
+.assembly-btn.view {
+    background: #6b7280;
+}
+
+.assembly-empty-state {
+    background: white;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    color: #777;
+}

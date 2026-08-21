@@ -1,0 +1,107 @@
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, .45);
+    z-index: 999;
+}
+
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 480px;
+    max-width: 100%;
+    height: 100vh;
+    background: #fff;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 15px rgba(0,0,0,.15);
+    animation: drawerSlide .25s ease;
+}
+
+@keyframes drawerSlide {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.drawer-header h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 22px;
+}
+
+.drawer-close-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 22px;
+    color: #64748b;
+}
+
+.drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.drawer-section {
+    margin-bottom: 28px;
+}
+
+.drawer-section:last-child {
+    margin-bottom: 0;
+}
+
+.drawer-section h3 {
+    margin: 0 0 16px;
+    color: #2563eb;
+    font-size: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+}
+
+.drawer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.drawer-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer-item label {
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.drawer-item span {
+    font-size: 15px;
+    color: #1e293b;
+    word-break: break-word;
+}
+
+@media (max-width:768px) {
+
+    .drawer {
+        width: 100%;
+    }
+
+}

@@ -1,0 +1,105 @@
+{
+  "orders": [
+    {
+      "id": "9f788d90-be27-408b-87ad-d288a8d95b5e",
+      "orderNumber": "PO-2026-TEX001",
+      "status": "YARN_WEAVING_INPROGRESS",
+      "isPsApproved": null
+    },
+    {
+      "id": "4b649b56-d6be-425c-9340-3a0991ae972a",
+      "orderNumber": "PO-2026-TEX002",
+      "status": "PS_SAMPLE_PENDING",
+      "isPsApproved": null
+    },
+    {
+      "id": "5877afd1-0d38-4ed1-a65b-061fe2e22c5b",
+      "orderNumber": "PO-2026-TEX003",
+      "status": "MATERIAL_ALLOCATED",
+      "isPsApproved": null
+    },
+    {
+      "id": "2824132f-e3cb-4f49-9163-3f38f9d35900",
+      "orderNumber": "PO-2026-TEX004",
+      "status": "EXPORT_READY",
+      "isPsApproved": true
+    }
+  ],
+  "requisitions": [
+    {
+      "id": "deafcc07-b67f-435e-9cdc-56f6099bbb48",
+      "orderTokenId": "2824132f-e3cb-4f49-9163-3f38f9d35900",
+      "status": "RELEASED",
+      "requestedMaterialId": "48228944-5d69-4136-a367-275a32bf0e17",
+      "requestedVolume": "1600",
+      "volumeUnit": "Pieces"
+    },
+    {
+      "id": "30a6281e-0dc5-4c4b-8d78-6bd0db8c9977",
+      "orderTokenId": "4b649b56-d6be-425c-9340-3a0991ae972a",
+      "status": "PENDING",
+      "requestedMaterialId": "2158dc1c-dc03-4a4d-b2ca-570e5eac86b1",
+      "requestedVolume": "1200",
+      "volumeUnit": "Pieces"
+    },
+    {
+      "id": "e8a16493-7d32-4022-b3a5-f9558297398d",
+      "orderTokenId": "5877afd1-0d38-4ed1-a65b-061fe2e22c5b",
+      "status": "RELEASED",
+      "requestedMaterialId": "2bdd9bb8-9cf1-4d6b-a88d-d7a540bb4efa",
+      "requestedVolume": "1400",
+      "volumeUnit": "Meters"
+    },
+    {
+      "id": "4e42274c-14bd-4bc5-893d-1ea0d2947acf",
+      "orderTokenId": "9f788d90-be27-408b-87ad-d288a8d95b5e",
+      "status": "DISPATCHED",
+      "requestedMaterialId": "96cf3e2d-151a-4765-a1a9-74d28f15e4ff",
+      "requestedVolume": "1000",
+      "volumeUnit": "Kg"
+    },
+    {
+      "id": "cb300eda-5a52-4ce7-9f34-c9ff5f66a01b",
+      "orderTokenId": "9f788d90-be27-408b-87ad-d288a8d95b5e",
+      "status": "PENDING",
+      "requestedMaterialId": "96cf3e2d-151a-4765-a1a9-74d28f15e4ff",
+      "requestedVolume": "50",
+      "volumeUnit": "Kg"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "2158dc1c-dc03-4a4d-b2ca-570e5eac86b1",
+      "masterSampleCode": "MAT-ACC-ZIPYKK",
+      "materialType": "Accessory",
+      "description": "YKK Gunmetal Metallic Zippers 20cm",
+      "physicalVolume": "5000",
+      "volumeUnit": "Pieces"
+    },
+    {
+      "id": "2bdd9bb8-9cf1-4d6b-a88d-d7a540bb4efa",
+      "masterSampleCode": "MAT-FAB-JSY180",
+      "materialType": "Fabric",
+      "description": "180 GSM Single Jersey Fabric",
+      "physicalVolume": "10000",
+      "volumeUnit": "Meters"
+    },
+    {
+      "id": "48228944-5d69-4136-a367-275a32bf0e17",
+      "masterSampleCode": "MAT-PKG-BOX01",
+      "materialType": "Packaging",
+      "description": "Standard Corrugated Shipping Box",
+      "physicalVolume": "1500",
+      "volumeUnit": "Pieces"
+    },
+    {
+      "id": "96cf3e2d-151a-4765-a1a9-74d28f15e4ff",
+      "masterSampleCode": "MAT-YRN-COT50",
+      "materialType": "Yarn",
+      "description": "50s Combed Cotton Ring Spun Yarn",
+      "physicalVolume": "25000",
+      "volumeUnit": "Kg"
+    }
+  ],
+  "generatedAt": "2026-07-12T20:18:05.442Z"
+}

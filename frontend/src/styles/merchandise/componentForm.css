@@ -1,0 +1,101 @@
+.component-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    width: 100%;
+
+    max-width: 650px;
+
+}
+
+.component-form h2 {
+
+    margin-top: 0;
+
+    margin-bottom: 10px;
+
+}
+
+.component-form h3 {
+
+    margin-top: 10px;
+
+    margin-bottom: 0;
+
+    color: #444;
+
+}
+
+.component-form hr {
+
+    border: none;
+
+    border-top: 1px solid #e0e0e0;
+
+    margin: 12px 0;
+
+}
+
+.component-form input {
+
+    padding: 12px;
+
+    border: 1px solid #d9d9d9;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    transition: border-color 0.2s;
+
+}
+
+.component-form input:focus {
+
+    outline: none;
+
+    border-color: #1976d2;
+
+}
+
+.component-form button {
+
+    margin-top: 12px;
+
+    background: #1976d2;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 12px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+.component-form button:hover:not(:disabled) {
+
+    background: #1565c0;
+
+}
+
+.component-form button:disabled {
+
+    background: #bdbdbd;
+
+    cursor: not-allowed;
+
+}

@@ -1,0 +1,140 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    background: #f8fafc;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.dashboard-content {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dashboard-empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.dashboard-loading {
+    padding: 60px;
+    text-align: center;
+    font-size: 15px;
+    color: #64748b;
+}
+
+
+/* ============================================================
+   DROPDOWN / SELECTION BAR
+============================================================ */
+
+.selection-bar {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.selection-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 260px;
+}
+
+.selection-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.selection-group select {
+    width: 100%;
+    height: 42px;
+    padding: 0 38px 0 13px;
+
+    font-size: 14px;
+    font-family: inherit;
+    color: #374151;
+
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+
+    outline: none;
+    cursor: pointer;
+
+    /* Remove default browser appearance */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Custom dropdown arrow */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.selection-group select:hover {
+    border-color: #9ca3af;
+}
+
+.selection-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.selection-group select:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.selection-group select option {
+    color: #374151;
+    background: #ffffff;
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .selection-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .selection-group {
+        width: 100%;
+        min-width: 0;
+    }
+
+}

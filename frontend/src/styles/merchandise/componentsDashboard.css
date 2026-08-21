@@ -1,0 +1,115 @@
+.components-dashboard {
+
+    width: 100%;
+
+}
+
+.components-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+
+}
+
+.components-header h2 {
+
+    margin: 0;
+
+}
+
+.components-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+.components-actions select {
+
+    min-width: 280px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d9d9d9;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    background: white;
+
+    cursor: pointer;
+
+}
+
+.components-actions select:focus {
+
+    outline: none;
+
+    border-color: #1976d2;
+
+}
+
+.add-component-btn {
+
+    background: #1976d2;
+
+    color: white;
+
+    border: none;
+
+    padding: 11px 18px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+
+}
+
+.add-component-btn:hover:not(:disabled) {
+
+    background: #1565c0;
+
+}
+
+.add-component-btn:disabled {
+
+    background: #bdbdbd;
+
+    cursor: not-allowed;
+
+}
+
+.locked-warning {
+
+    margin-bottom: 20px;
+
+    padding: 14px 18px;
+
+    background: #fff8e1;
+
+    border: 1px solid #ffe082;
+
+    color: #8d6e63;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+}

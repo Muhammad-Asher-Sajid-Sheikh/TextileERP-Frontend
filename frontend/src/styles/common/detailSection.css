@@ -1,0 +1,37 @@
+.detail-section {
+
+    margin-bottom: 28px;
+
+}
+
+.detail-section:last-child {
+
+    margin-bottom: 0;
+
+}
+
+.detail-section-title {
+
+    margin: 0 0 16px;
+
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid #ececec;
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+    color: #222;
+
+}
+
+.detail-section-body {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+}

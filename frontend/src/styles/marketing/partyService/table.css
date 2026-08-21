@@ -1,0 +1,71 @@
+.dashboard-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.08);
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.dashboard-table thead {
+    background: #f1f5f9;
+}
+
+.dashboard-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 14px;
+    color: #334155;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.dashboard-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #edf2f7;
+    font-size: 14px;
+    color: #475569;
+    vertical-align: middle;
+}
+
+.dashboard-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.actions-column {
+    width: 200px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 55px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-yes {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-no {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.dashboard-empty-state {
+    text-align: center;
+    padding: 60px;
+    color: #64748b;
+    font-size: 15px;
+}

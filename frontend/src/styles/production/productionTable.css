@@ -1,0 +1,132 @@
+.production-table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.production-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.production-table thead {
+    background-color: #f8f9fb;
+}
+
+.production-table th {
+    padding: 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.production-table td {
+    padding: 16px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+}
+
+.production-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.actions-column {
+    width: 260px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.btn-view {
+    background: #3498db;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #2980b9;
+}
+
+.btn-complete {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-complete:hover {
+    background: #1e8449;
+}
+
+.btn-dispatch {
+    background: #f39c12;
+    color: white;
+}
+
+.btn-dispatch:hover {
+    background: #d68910;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.in-progress {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.not-required {
+    background: #ececec;
+    color: #555;
+}
+
+.production-table-loading,
+.production-table-empty {
+    background: white;
+    padding: 60px;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #666;
+}
+
+.btn-output {
+    background: #8e44ad;
+    color: white;
+}
+
+.btn-output:hover {
+    background: #732d91;
+}

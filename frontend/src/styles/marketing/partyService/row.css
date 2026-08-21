@@ -1,0 +1,56 @@
+.dashboard-row {
+    transition: background-color 0.2s ease;
+}
+
+.dashboard-row:hover {
+    background-color: #f8fafc;
+}
+
+.actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.action-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.view-btn {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.view-btn:hover {
+    background: #bfdbfe;
+}
+
+.edit-btn {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.edit-btn:hover {
+    background: #fde68a;
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}

@@ -1,0 +1,135 @@
+.pps-form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+    width: 100%;
+
+    max-width: 850px;
+
+}
+
+.pps-form h2 {
+
+    margin: 0;
+
+    color: #222;
+
+}
+
+.pps-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+
+}
+
+.pps-form label {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #444;
+
+}
+
+.pps-form input,
+.pps-form select,
+.pps-form textarea {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #d9d9d9;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+
+}
+
+.pps-form textarea {
+
+    resize: vertical;
+
+    min-height: 100px;
+
+}
+
+.pps-form input:focus,
+.pps-form select:focus,
+.pps-form textarea:focus {
+
+    outline: none;
+
+    border-color: #1976d2;
+
+}
+
+.pps-form button {
+
+    align-self: flex-end;
+
+    padding: 12px 28px;
+
+    background: #1976d2;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.2s;
+
+}
+
+.pps-form button:hover:not(:disabled) {
+
+    background: #1565c0;
+
+}
+
+.pps-form button:disabled {
+
+    background: #bdbdbd;
+
+    cursor: not-allowed;
+
+}
+
+@media (max-width: 768px) {
+
+    .pps-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .pps-form button {
+
+        width: 100%;
+
+    }
+
+}

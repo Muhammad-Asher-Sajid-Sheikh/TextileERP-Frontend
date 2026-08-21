@@ -1,0 +1,52 @@
+.techpack-container {
+    max-width: 700px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 12px rgba(0,0,0,.08);
+}
+
+.subtitle{
+    color:#666;
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.form-group input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:15px;
+}
+
+button{
+    width:100%;
+    background:#1976d2;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.message{
+    margin-top:20px;
+    font-weight:600;
+}

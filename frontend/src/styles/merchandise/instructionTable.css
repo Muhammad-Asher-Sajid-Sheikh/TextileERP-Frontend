@@ -1,0 +1,135 @@
+.instruction-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: white;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+}
+
+.instruction-table th {
+
+    background: #f5f5f5;
+
+    padding: 15px;
+
+    text-align: left;
+
+    color : #111;
+
+}
+
+.instruction-table td {
+
+    color : #111;
+
+    padding: 15px;
+
+    border-top: 1px solid #ececec;
+
+}
+
+.status {
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+.status.draft {
+
+    background: #fff7d6;
+
+    color: #9c6b00;
+
+}
+
+.status.released {
+
+    background: #dff7e7;
+
+    color: #0b7a36;
+
+}
+
+.release-btn,
+.revision-btn,
+.delete-btn {
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    padding: 8px 14px;
+
+    margin-right: 8px;
+
+    font-size: 14px;
+
+}
+
+.release-btn {
+
+    background: #1976d2;
+
+    color: white;
+
+}
+
+.revision-btn {
+
+    background: #ff9800;
+
+    color: white;
+
+}
+
+.delete-btn {
+
+    background: #d32f2f;
+
+    color: white;
+
+}
+
+.table-message {
+
+    text-align: center;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 10px;
+
+}
+
+.view-btn{
+
+    background:#5e35b1;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 14px;
+
+    border-radius:6px;
+
+    margin-right:8px;
+
+    cursor:pointer;
+
+}

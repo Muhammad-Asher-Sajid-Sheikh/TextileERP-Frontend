@@ -1,0 +1,181 @@
+.production-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 9998;
+}
+
+.production-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    width: 420px;
+    max-width: 100%;
+    height: 100vh;
+
+    background: #fff;
+
+    box-shadow: -6px 0 18px rgba(0,0,0,.15);
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 9999;
+
+    animation: drawerSlide .25s ease;
+}
+
+@keyframes drawerSlide {
+
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+
+}
+
+.production-drawer-header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #ececec;
+
+}
+
+.production-drawer-header h2 {
+
+    margin: 0;
+    font-size: 22px;
+
+}
+
+.drawer-close-btn {
+
+    border: none;
+    background: transparent;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+    color: #666;
+
+}
+
+.drawer-close-btn:hover {
+
+    color: #d32f2f;
+
+}
+
+.production-drawer-body {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 20px;
+
+}
+
+.drawer-section {
+
+    margin-bottom: 28px;
+
+}
+
+.drawer-section h3 {
+
+    margin-bottom: 15px;
+
+    color: #1976d2;
+
+    font-size: 17px;
+
+    border-bottom: 1px solid #ececec;
+
+    padding-bottom: 8px;
+
+}
+
+.drawer-item {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 14px;
+
+    gap: 15px;
+
+}
+
+.drawer-item span:first-child {
+
+    color: #666;
+
+}
+
+.drawer-item strong {
+
+    color: #222;
+    text-align: right;
+
+}
+
+.drawer-status {
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+}
+
+.drawer-status.completed {
+
+    background: #d4edda;
+    color: #155724;
+
+}
+
+.drawer-status.pending {
+
+    background: #fff3cd;
+    color: #856404;
+
+}
+
+.drawer-status.in-progress {
+
+    background: #d1ecf1;
+    color: #0c5460;
+
+}
+
+.drawer-status.not-required {
+
+    background: #ececec;
+    color: #555;
+
+}
+
+@media (max-width:768px){
+
+    .production-drawer{
+
+        width:100%;
+
+    }
+
+}

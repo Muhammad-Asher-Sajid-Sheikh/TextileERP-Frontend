@@ -1,0 +1,148 @@
+.surface-table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+}
+
+.surface-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 950px;
+}
+
+.surface-table thead {
+    background: #f8fafc;
+}
+
+.surface-table th {
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: #475569;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.surface-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #374151;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.surface-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.surface-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.surface-actions button {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.view-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.view-btn:hover {
+    background: #1d4ed8;
+}
+
+.dispatch-btn {
+    background: #f59e0b;
+    color: white;
+}
+
+.dispatch-btn:hover {
+    background: #d97706;
+}
+
+.complete-btn {
+    background: #10b981;
+    color: white;
+}
+
+.complete-btn:hover {
+    background: #059669;
+}
+
+.disabled-btn {
+    background: #d1d5db;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.status-inprogress {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-returned {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-discrepancy_flagged {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-not_required {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.surface-empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+
+    .surface-table {
+        min-width: 850px;
+    }
+
+    .surface-actions {
+        flex-direction: column;
+    }
+
+    .surface-actions button {
+        width: 100%;
+    }
+
+}

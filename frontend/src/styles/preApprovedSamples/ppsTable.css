@@ -1,0 +1,199 @@
+.pps-table-wrapper {
+
+    background: #fff;
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 10px;
+
+    overflow-x: auto;
+
+}
+
+.pps-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 1200px;
+
+}
+
+.pps-table thead {
+
+    background: #f8f9fb;
+
+}
+
+.pps-table th {
+
+    padding: 14px;
+
+    text-align: left;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #444;
+
+    border-bottom: 1px solid #e5e5e5;
+
+}
+
+.pps-table td {
+
+    padding: 14px;
+
+    border-bottom: 1px solid #f2f2f2;
+
+    font-size: 14px;
+
+    vertical-align: middle;
+
+}
+
+.pps-table tbody tr:hover {
+
+    background: #fafafa;
+
+}
+
+.pps-table-empty {
+
+    background: white;
+
+    border: 1px dashed #d9d9d9;
+
+    border-radius: 10px;
+
+    padding: 50px;
+
+    text-align: center;
+
+    color: #666;
+
+}
+
+/* ---------- Badges ---------- */
+
+.badge {
+
+    display: inline-block;
+
+    padding: 4px 10px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+.badge-success {
+
+    background: #e8f5e9;
+
+    color: #2e7d32;
+
+}
+
+.badge-warning {
+
+    background: #fff8e1;
+
+    color: #ef6c00;
+
+}
+
+.badge-danger {
+
+    background: #ffebee;
+
+    color: #c62828;
+
+}
+
+/* ---------- Status ---------- */
+
+.status {
+
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+.status.done {
+
+    background: #e8f5e9;
+
+    color: #2e7d32;
+
+}
+
+.status.pending {
+
+    background: #fff3cd;
+
+    color: #856404;
+
+}
+
+/* ---------- Delete ---------- */
+
+.delete-btn {
+
+    background: #dc3545;
+
+    color: white;
+
+    border: none;
+
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.delete-btn:hover {
+
+    background: #bb2d3b;
+
+}
+
+.edit-btn {
+
+    background: #0d6efd;
+
+    color: white;
+
+    border: none;
+
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+.edit-btn:hover {
+
+    background: #0b5ed7;
+
+}
