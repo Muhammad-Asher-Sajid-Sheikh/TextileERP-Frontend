@@ -18,7 +18,7 @@ import {
 import CrudToolbar from "../../components/common/marketing/CrudToolbar";
 import CrudTable from "../../components/common/marketing/CrudTable";
 import CrudFormModal from "../../components/common/marketing/CrudFormModal";
-import ViewPartyDrawer from "../../components/marketing/partyService/ViewPartyDrawer";
+import ViewInquiryDrawer from "../../components/marketing/InquiryService/viewInquiryDrawer";
 
 import "../../styles/marketing/partyService/dashboard.css";
 
@@ -56,6 +56,7 @@ const columns = [
 
 const PartyServiceDashboard = () => {
 
+    const [selectedInquiry, setSelectedInquiry] = useState(null);
     const [inquiry, setinquiry] = useState([]);
     const [parties, setParties] = useState([]);
     const [users, setUsers] = useState([]);
@@ -80,13 +81,13 @@ const PartyServiceDashboard = () => {
 
 
     const loadParties = async () => {
-    try {
-        const response = await getAllParties();
-        setParties(response.data || []);
-    } catch (error) {
-        console.error(error);
-    }
-};
+        try {
+            const response = await getAllParties();
+            setParties(response.data || []);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
     const partyOptions = parties.map((party) => ({
@@ -100,98 +101,98 @@ const PartyServiceDashboard = () => {
     }));
 
     const loadUsers = async () => {
-    try {
-        // TODO: Replace with GET /users API
-        const dummyUsers = [
-            {
-                id: "23787779-a2f7-49b9-bebc-dbd21b0f36f0",
-                fullName: "Marketing",
-            },
-            {
-                id: "213353fc-f808-43a5-9df0-b4747000285e",
-                fullName: "Asher Sajid",
-            },
-            {
-                id: "bb051c54-65a0-47c9-a84b-bbd77385e8b8",
-                fullName: "Management",
-            },
-        ];
+        try {
+            // TODO: Replace with GET /users API
+            const dummyUsers = [
+                {
+                    id: "23787779-a2f7-49b9-bebc-dbd21b0f36f0",
+                    fullName: "Marketing",
+                },
+                {
+                    id: "2d2830c9-5421-47e7-9b93-33547596f22d",
+                    fullName: "Asher Sajid",
+                },
+                {
+                    id: "bb051c54-65a0-47c9-a84b-bbd77385e8b8",
+                    fullName: "Management",
+                },
+            ];
 
-        setUsers(dummyUsers);
-    } catch (error) {
-        console.error(error);
-    }
-};
+            setUsers(dummyUsers);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const inquiryFields = [
-    {
-        name: "icnNumber",
-        label: "ICN Number",
-        type: "text",
-        required: true,
-    },
-    {
-        name: "customerId",
-        label: "Customer",
-        type: "select",
-        required: true,
-        placeholder: "Select Customer",
-        options: partyOptions,
-    },
-    {
-        name: "channel",
-        label: "Channel",
-        type: "text",
-        required: true,
-    },
-    {
-        name: "assignedMerchandiserId",
-        label: "Assigned Merchandiser",
-        type: "select",
-        required: true,
-        placeholder: "Select Merchandiser",
-        options: userOptions,
-    },
-    {
-        name: "responseDueDate",
-        label: "Response Due Date",
-        type: "date",
-        required: true,
-    },
-    {
-        name: "priority",
-        label: "Priority",
-        type: "select",
-        required: true,
-        options: [
-            { value: "LOW", label: "Low" },
-            { value: "MEDIUM", label: "Medium" },
-            { value: "HIGH", label: "High" },
-        ],
-    },
-    {
-        name: "status",
-        label: "Status",
-        type: "select",
-        required: true,
-        options: [
-            { value: "RECEIVED", label: "Received" },
-            { value: "UNDER_FEASIBILITY", label: "Under Feasibility" },
-            { value: "COSTING_IN_PROGRESS", label: "Costing In Progress" },
-            { value: "QUOTED", label: "Quoted" },
-            { value: "SAMPLE_DEVELOPMENT", label: "Sample Development" },
-            { value: "PO_RECEIVED", label: "PO Received" },
-            { value: "CONVERTED_TO_ORDER", label: "Converted to Order" },
-            { value: "REJECTED", label: "Rejected" },
-            { value: "CANCELLED", label: "Cancelled" },
-        ],
-    },
-    {
-        name: "originalCommAttachment",
-        label: "Attachment URL",
-        type: "text",
-    },
-];
+        {
+            name: "icnNumber",
+            label: "ICN Number",
+            type: "text",
+            required: true,
+        },
+        {
+            name: "customerId",
+            label: "Customer",
+            type: "select",
+            required: true,
+            placeholder: "Select Customer",
+            options: partyOptions,
+        },
+        {
+            name: "channel",
+            label: "Channel",
+            type: "text",
+            required: true,
+        },
+        {
+            name: "assignedMerchandiserId",
+            label: "Assigned Merchandiser",
+            type: "select",
+            required: true,
+            placeholder: "Select Merchandiser",
+            options: userOptions,
+        },
+        {
+            name: "responseDueDate",
+            label: "Response Due Date",
+            type: "date",
+            required: true,
+        },
+        {
+            name: "priority",
+            label: "Priority",
+            type: "select",
+            required: true,
+            options: [
+                { value: "LOW", label: "Low" },
+                { value: "MEDIUM", label: "Medium" },
+                { value: "HIGH", label: "High" },
+            ],
+        },
+        {
+            name: "status",
+            label: "Status",
+            type: "select",
+            required: true,
+            options: [
+                { value: "RECEIVED", label: "Received" },
+                { value: "UNDER_FEASIBILITY", label: "Under Feasibility" },
+                { value: "COSTING_IN_PROGRESS", label: "Costing In Progress" },
+                { value: "QUOTED", label: "Quoted" },
+                { value: "SAMPLE_DEVELOPMENT", label: "Sample Development" },
+                { value: "PO_RECEIVED", label: "PO Received" },
+                { value: "CONVERTED_TO_ORDER", label: "Converted to Order" },
+                { value: "REJECTED", label: "Rejected" },
+                { value: "CANCELLED", label: "Cancelled" },
+            ],
+        },
+        {
+            name: "originalCommAttachment",
+            label: "Attachment URL",
+            type: "text",
+        },
+    ];
 
     /* =======================================================
        LOAD ALL inquiry
@@ -237,38 +238,35 @@ const PartyServiceDashboard = () => {
        SEARCH
     ======================================================= */
 
-    const filteredinquiry = useMemo(() => {
-
-        if (!searchTerm.trim())
+    const filteredInquiry = useMemo(() => {
+        if (!searchTerm.trim()) {
             return inquiry;
+        }
 
-        const keyword =
-            searchTerm.toLowerCase();
+        const keyword = searchTerm.toLowerCase();
 
-        return inquiry.filter((party) =>
-
-            party.partyCode
+        return inquiry.filter((item) =>
+            item.icnNumber
                 ?.toLowerCase()
                 .includes(keyword) ||
 
-            party.legalName
+            item.customer?.legalName
                 ?.toLowerCase()
                 .includes(keyword) ||
 
-            party.country
+            item.channel
                 ?.toLowerCase()
                 .includes(keyword) ||
 
-            party.contactEmail
+            item.priority
+                ?.toLowerCase()
+                .includes(keyword) ||
+
+            item.status
                 ?.toLowerCase()
                 .includes(keyword)
-
         );
-
-        
-
     }, [inquiry, searchTerm]);
-
     /* =======================================================
        ADD
     ======================================================= */
@@ -382,7 +380,7 @@ const PartyServiceDashboard = () => {
             );
 
             toast.success(
-                "Party deleted successfully."
+                "Inquiry deleted successfully."
             );
 
             loadinquiry();
@@ -392,7 +390,7 @@ const PartyServiceDashboard = () => {
             console.error(error);
 
             toast.error(
-                "Unable to delete party."
+                "Unable to delete inquiry."
             );
 
         } finally {
@@ -410,86 +408,86 @@ const PartyServiceDashboard = () => {
     const handleSubmit =
         async (formData) => {
 
-        try {
+            try {
 
-            setFormLoading(true);
+                setFormLoading(true);
 
-            if (
-                formMode === "add"
-            ) {
+                if (
+                    formMode === "add"
+                ) {
 
-                await createInquiry(
-                    formData
+                    await createInquiry(
+                        formData
+                    );
+
+                    toast.success(
+                        "Inquiry created successfully."
+                    );
+
+                } else {
+
+                    await updateInquiry(
+                        selectedParty.id,
+                        formData
+                    );
+
+                    toast.success(
+                        "Inquiry updated successfully."
+                    );
+
+                }
+
+                setShowFormModal(
+                    false
                 );
 
-                toast.success(
-                    "Party created successfully."
+                setSelectedParty(
+                    null
                 );
 
-            } else {
+                loadinquiry();
 
-                await updateInquiry(
-                    selectedParty.id,
-                    formData
+            } catch (error) {
+
+                console.error(error);
+
+                toast.error(
+                    error?.response?.data
+                        ?.message ||
+                    "Operation failed."
                 );
 
-                toast.success(
-                    "Party updated successfully."
+            } finally {
+
+                setFormLoading(
+                    false
                 );
 
             }
 
-            setShowFormModal(
-                false
-            );
+        };
 
-            setSelectedParty(
-                null
-            );
-
-            loadinquiry();
-
-        } catch (error) {
-
-            console.error(error);
-
-            toast.error(
-                error?.response?.data
-                    ?.message ||
-                "Operation failed."
-            );
-
-        } finally {
-
-            setFormLoading(
-                false
-            );
-
-        }
-
-    };
-
-        return (
+    return (
         <div className="dashboard-container">
 
             <div className="dashboard-content">
 
                 <CrudToolbar
-                    title="Party Service"
+                    title="Inquiry Service"
                     searchTerm={searchTerm}
                     onSearch={setSearchTerm}
                     onAdd={handleAdd}
-                    addButtonText="Add Party"
+                    addButtonText="Add Inquiry"
                     loading={loading}
                 />
 
                 <CrudTable
                     columns={columns}
-                    data={filteredinquiry}
+                    data={filteredInquiry}
                     loading={loading}
                     onView={handleView}
                     onEdit={handleEdit}
-                    onDelete={false}
+                    onDelete={handleDelete}
                 />
 
             </div>
@@ -512,16 +510,16 @@ const PartyServiceDashboard = () => {
                 onSubmit={handleSubmit}
             />
 
-            <ViewPartyDrawer
+            <ViewInquiryDrawer
                 isOpen={showDrawer}
-                party={selectedParty}
+                inquiry={selectedParty}
                 onClose={() => {
-
                     setShowDrawer(false);
                     setSelectedParty(null);
-
                 }}
             />
+
+
 
         </div>
     );

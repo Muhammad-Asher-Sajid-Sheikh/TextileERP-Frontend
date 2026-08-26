@@ -27,8 +27,10 @@ import {
 import CrudTable from "../../components/common/marketing/CrudTable";
 import CrudFormModal from "../../components/common/marketing/CrudFormModal";
 
-import ViewCostSheetDrawer from "../../components/marketing/PartyService/ViewPartyDrawer";
+// import ViewCostSheetDrawer from "../../components/marketing/PartyService/ViewPartyDrawer";
 
+import ViewCostSheetDrawer
+    from "../../components/marketing/CostSheetService/ViewCostSheetDrawer";
 import "../../styles/marketing/partyService/dashboard.css";
 
 
@@ -847,36 +849,36 @@ const CostSheetServiceDashboard = () => {
 
             setLoading(true);
 
+            if (!item?.id) {
+                toast.error("Unable to identify this record.");
+                return;
+            }
+
             if (activeType === "costSheet") {
 
                 const response =
-                    await getCostSheetById(
-                        item.id
-                    );
+                    await getCostSheetById(item.id);
 
                 const data =
                     response?.data || item;
 
-                setSelectedCostSheet(
-                    data
-                );
-
-                setSelectedItem(
-                    data
-                );
+                setSelectedCostSheet(data);
+                setSelectedItem(data);
 
             } else {
 
-                setSelectedItem(
-                    item
-                );
+                setSelectedItem(item);
+
             }
 
             setShowDrawer(true);
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Failed to load details:",
+                error
+            );
 
             toast.error(
                 "Failed to load details."
@@ -909,18 +911,87 @@ const CostSheetServiceDashboard = () => {
     ======================================================== */
 
     const handleDelete = async (item) => {
+        if (!item?.id) {
+            toast.error("Unable to identify the record.");
+            return;
+        }
 
-        /*
-         * No delete cost-sheet API exists
-         * in the provided routes.
-         *
-         * Therefore we do not call a
-         * non-existent API.
-         */
-
-        toast.info(
-            "Delete API is not available for cost sheets."
+        const confirmed = window.confirm(
+            `Are you sure you want to delete this ${activeType === "yarn"
+                ? "yarn"
+                : activeType === "dyeingColor"
+                    ? "dyeing color"
+                    : "cost sheet"
+            }?`
         );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            /* =====================================================
+               COST SHEET
+               No delete API exists
+            ===================================================== */
+
+            if (activeType === "costSheet") {
+                toast.info(
+                    "Delete API is not available for cost sheets."
+                );
+                return;
+            }
+
+
+            /* =====================================================
+               YARN
+            ===================================================== */
+
+            if (activeType === "yarn") {
+                await deleteYarn(item.id);
+
+                toast.success(
+                    "Yarn deleted successfully."
+                );
+            }
+
+
+            /* =====================================================
+               DYEING COLOR
+            ===================================================== */
+
+            if (activeType === "dyeingColor") {
+                await deleteDyeingColor(item.id);
+
+                toast.success(
+                    "Dyeing color deleted successfully."
+                );
+            }
+
+
+            /* =====================================================
+               REFRESH COST SHEETS
+            ===================================================== */
+
+            await loadCostSheets(
+                selectedInquiryId
+            );
+
+        } catch (error) {
+            console.error(
+                "Delete failed:",
+                error
+            );
+
+            toast.error(
+                "Failed to delete record."
+            );
+
+        } finally {
+            setLoading(false);
+        }
     };
 
 
@@ -1309,17 +1380,11 @@ const CostSheetServiceDashboard = () => {
             ================================================= */}
 
             <ViewCostSheetDrawer
-                isOpen={
-                    showDrawer
-                }
-
-                costSheet={
-                    selectedCostSheet
-                }
-
-                onClose={
-                    closeDrawer
-                }
+                isOpen={showDrawer}
+                costSheet={selectedCostSheet}
+                item={selectedItem}
+                type={activeType}
+                onClose={closeDrawer}
             />
 
         </div>

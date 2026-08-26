@@ -116,18 +116,27 @@ const baselineFields = [
     },
 
     {
-        name: "sizeColorSplitJson",
-        label: "Size & Color Split",
-        type: "textarea",
+        name: "size",
+        label: "Size",
+        type: "text",
         required: true,
-        placeholder: `Example:
-{
-  "sizes": ["Bath Towel 70x140"],
-  "colors": ["White"],
-  "quantities": {
-    "Bath Towel": 5000
-  }
-}`,
+        placeholder: "e.g. Bath Towel 70x140",
+    },
+
+    {
+        name: "color",
+        label: "Color",
+        type: "text",
+        required: true,
+        placeholder: "e.g. White",
+    },
+
+    {
+        name: "quantity",
+        label: "Quantity",
+        type: "number",
+        required: true,
+        placeholder: "e.g. 5000",
     },
 
     {
@@ -140,15 +149,19 @@ const baselineFields = [
     },
 
     {
-        name: "unclearParameters",
-        label: "Unclear Parameters",
-        type: "textarea",
+        name: "unclearBorderStyle",
+        label: "Border Style",
+        type: "text",
         required: false,
-        placeholder: `Example:
-{
-  "borderStyle": "TBD",
-  "embroideryPlacement": "TBD"
-}`,
+        placeholder: "e.g. Plain / Jacquard / TBD",
+    },
+
+    {
+        name: "unclearEmbroideryPlacement",
+        label: "Embroidery Placement",
+        type: "text",
+        required: false,
+        placeholder: "e.g. Corner / Center / TBD",
     },
 
     {
@@ -465,42 +478,42 @@ const InquiryServiceDashboard = () => {
     const loadFeasibilityReviews =
         async (inquiryId) => {
 
-        if (!inquiryId) {
+            if (!inquiryId) {
 
-            setFeasibilityReviews([]);
+                setFeasibilityReviews([]);
 
-            return;
-        }
+                return;
+            }
 
-        try {
+            try {
 
-            setLoading(true);
+                setLoading(true);
 
-            const response =
-                await getFeasibilityReviewsByInquiry(
-                    inquiryId
+                const response =
+                    await getFeasibilityReviewsByInquiry(
+                        inquiryId
+                    );
+
+                setFeasibilityReviews(
+                    response.data || []
                 );
 
-            setFeasibilityReviews(
-                response.data || []
-            );
+            } catch (error) {
 
-        } catch (error) {
+                console.error(error);
 
-            console.error(error);
+                setFeasibilityReviews([]);
 
-            setFeasibilityReviews([]);
+                toast.error(
+                    "Failed to load feasibility reviews."
+                );
 
-            toast.error(
-                "Failed to load feasibility reviews."
-            );
+            } finally {
 
-        } finally {
+                setLoading(false);
 
-            setLoading(false);
-
-        }
-    };
+            }
+        };
 
 
     /* =====================================================
@@ -568,16 +581,16 @@ const InquiryServiceDashboard = () => {
     const handleViewTypeChange =
         (e) => {
 
-        setViewType(
-            e.target.value
-        );
+            setViewType(
+                e.target.value
+            );
 
-        setSearchTerm("");
+            setSearchTerm("");
 
-        setSelectedItem(null);
+            setSelectedItem(null);
 
-        setShowDetails(false);
-    };
+            setShowDetails(false);
+        };
 
 
     /* =====================================================
@@ -773,231 +786,225 @@ const InquiryServiceDashboard = () => {
     const handleSubmit =
         async (formData) => {
 
-        if (!selectedInquiryId) {
+            if (!selectedInquiryId) {
 
-            toast.error(
-                "Please select an inquiry."
-            );
+                toast.error(
+                    "Please select an inquiry."
+                );
 
-            return;
-        }
+                return;
+            }
 
-        try {
+            try {
 
-            setFormLoading(true);
+                setFormLoading(true);
 
-            /* =============================================
-               CREATE BASELINE
-            ============================================= */
+                /* =============================================
+                   CREATE BASELINE
+                ============================================= */
 
-            if (
-                viewType === "baseline"
-            ) {
-
-                const payload = {
-                    ...formData,
-                };
-
-
-                /*
-                 * Convert numeric value.
-                 */
                 if (
-                    payload.finishedGsmWeight !==
-                    "" &&
-                    payload.finishedGsmWeight !==
-                    null &&
-                    payload.finishedGsmWeight !==
-                    undefined
+                    viewType === "baseline"
                 ) {
 
-                    payload.finishedGsmWeight =
-                        Number(
-                            payload.finishedGsmWeight
-                        );
+                    const payload = {
+                        ...formData,
+                    };
 
-                } else {
 
-                    payload.finishedGsmWeight =
-                        null;
+                    /*
+                     * Convert numeric value.
+                     */
+                    if (
+                        payload.finishedGsmWeight !==
+                        "" &&
+                        payload.finishedGsmWeight !==
+                        null &&
+                        payload.finishedGsmWeight !==
+                        undefined
+                    ) {
+
+                        payload.finishedGsmWeight =
+                            Number(
+                                payload.finishedGsmWeight
+                            );
+
+                    } else {
+
+                        payload.finishedGsmWeight =
+                            null;
+
+                    }
+
+
+                    /* =============================================
+       BUILD SIZE & COLOR JSON
+    ============================================= */
+                    const quantity = Number(payload.quantity);
+
+                    if (!Number.isFinite(quantity) || quantity <= 0) {
+                        toast.error("Quantity must be greater than 0.");
+                        setFormLoading(false);
+                        return;
+                    }
+
+                    payload.sizeColorSplitJson = {
+                        sizes: [
+                            payload.size
+                        ],
+
+                        colors: [
+                            payload.color
+                        ],
+
+                        quantities: {
+                            [payload.size]: quantity,
+                        }
+                    };
+
+
+                    /* =============================================
+                       BUILD UNCLEAR PARAMETERS JSON
+                    ============================================= */
+
+                    if (
+                        payload.unclearBorderStyle ||
+                        payload.unclearEmbroideryPlacement
+                    ) {
+
+                        payload.unclearParameters = {
+                            borderStyle:
+                                payload.unclearBorderStyle || null,
+
+                            embroideryPlacement:
+                                payload.unclearEmbroideryPlacement || null,
+                        };
+
+                    } else {
+
+                        payload.unclearParameters = null;
+                    }
+
+
+                    /* =============================================
+                       REMOVE FRONTEND-ONLY FIELDS
+                    ============================================= */
+
+                    delete payload.size;
+                    delete payload.color;
+                    delete payload.quantity;
+
+                    delete payload.unclearBorderStyle;
+                    delete payload.unclearEmbroideryPlacement;
+
+
+                    await createBaseline(
+                        selectedInquiryId,
+                        payload
+                    );
+
+
+                    toast.success(
+                        "Baseline created successfully."
+                    );
 
                 }
 
 
-                /*
-                 * Convert JSON textarea
-                 * into actual JSON.
-                 */
-                if (
-                    typeof payload.sizeColorSplitJson ===
-                    "string"
-                ) {
+                /* =============================================
+                   CREATE FEASIBILITY REVIEW
+                ============================================= */
 
-                    try {
+                else {
 
-                        payload.sizeColorSplitJson =
-                            JSON.parse(
-                                payload.sizeColorSplitJson
-                            );
-
-                    } catch (error) {
+                    if (!selectedBaselineId) {
 
                         toast.error(
-                            "Size & Color Split must contain valid JSON."
+                            "Please select a baseline."
                         );
 
                         setFormLoading(false);
 
                         return;
                     }
+
+
+                    const payload = {
+                        ...formData,
+
+                        inquiryId:
+                            selectedInquiryId,
+                    };
+
+
+                    if (
+                        payload.leadTimeDays !==
+                        "" &&
+                        payload.leadTimeDays !==
+                        null &&
+                        payload.leadTimeDays !==
+                        undefined
+                    ) {
+
+                        payload.leadTimeDays =
+                            Number(
+                                payload.leadTimeDays
+                            );
+
+                    }
+
+
+                    await createFeasibilityReview(
+                        selectedBaselineId,
+                        payload
+                    );
+
+
+                    toast.success(
+                        "Feasibility review created successfully."
+                    );
+
                 }
+
+
+                setShowFormModal(false);
+
+                setSelectedItem(null);
 
 
                 /*
-                 * Convert optional JSON.
+                 * Reload both datasets because
+                 * creating a baseline can affect the
+                 * active baseline.
                  */
-                if (
-                    payload.unclearParameters
-                ) {
 
-                    if (
-                        typeof payload.unclearParameters ===
-                        "string"
-                    ) {
-
-                        try {
-
-                            payload.unclearParameters =
-                                JSON.parse(
-                                    payload.unclearParameters
-                                );
-
-                        } catch (error) {
-
-                            toast.error(
-                                "Unclear Parameters must contain valid JSON."
-                            );
-
-                            setFormLoading(false);
-
-                            return;
-                        }
-                    }
-
-                } else {
-
-                    payload.unclearParameters =
-                        null;
-                }
-
-
-                await createBaseline(
-                    selectedInquiryId,
-                    payload
+                await loadBaselines(
+                    selectedInquiryId
                 );
 
-
-                toast.success(
-                    "Baseline created successfully."
+                await loadFeasibilityReviews(
+                    selectedInquiryId
                 );
+
+            } catch (error) {
+
+                console.error(error);
+
+                toast.error(
+                    error?.response?.data?.message ||
+                    "Operation failed."
+                );
+
+            } finally {
+
+                setFormLoading(false);
 
             }
+        };
 
-
-            /* =============================================
-               CREATE FEASIBILITY REVIEW
-            ============================================= */
-
-            else {
-
-                if (!selectedBaselineId) {
-
-                    toast.error(
-                        "Please select a baseline."
-                    );
-
-                    setFormLoading(false);
-
-                    return;
-                }
-
-
-                const payload = {
-                    ...formData,
-
-                    inquiryId:
-                        selectedInquiryId,
-                };
-
-
-                if (
-                    payload.leadTimeDays !==
-                    "" &&
-                    payload.leadTimeDays !==
-                    null &&
-                    payload.leadTimeDays !==
-                    undefined
-                ) {
-
-                    payload.leadTimeDays =
-                        Number(
-                            payload.leadTimeDays
-                        );
-
-                }
-
-
-                await createFeasibilityReview(
-                    selectedBaselineId,
-                    payload
-                );
-
-
-                toast.success(
-                    "Feasibility review created successfully."
-                );
-
-            }
-
-
-            setShowFormModal(false);
-
-            setSelectedItem(null);
-
-
-            /*
-             * Reload both datasets because
-             * creating a baseline can affect the
-             * active baseline.
-             */
-
-            await loadBaselines(
-                selectedInquiryId
-            );
-
-            await loadFeasibilityReviews(
-                selectedInquiryId
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-            toast.error(
-                error?.response?.data?.message ||
-                "Operation failed."
-            );
-
-        } finally {
-
-            setFormLoading(false);
-
-        }
-    };
-
-        /* =====================================================
-       RENDER
-    ===================================================== */
+    /* =====================================================
+   RENDER
+===================================================== */
 
     return (
         <div className="dashboard-container">
@@ -1127,68 +1134,68 @@ const InquiryServiceDashboard = () => {
                 {viewType === "feasibility" &&
                     selectedInquiryId && (
 
-                    <div
-                        style={{
-                            marginBottom: "20px",
-                        }}
-                    >
-
                         <div
-                            className="form-group"
                             style={{
-                                maxWidth: "500px",
+                                marginBottom: "20px",
                             }}
                         >
 
-                            <label>
-                                Baseline
-                            </label>
-
-                            <select
-                                value={
-                                    selectedBaselineId
-                                }
-                                onChange={(e) =>
-                                    setSelectedBaselineId(
-                                        e.target.value
-                                    )
-                                }
-                                disabled={
-                                    loading ||
-                                    baselines.length === 0
-                                }
+                            <div
+                                className="form-group"
+                                style={{
+                                    maxWidth: "500px",
+                                }}
                             >
 
-                                <option value="">
-                                    Select Baseline
-                                </option>
+                                <label>
+                                    Baseline
+                                </label>
 
-                                {baselineOptions.map(
-                                    (option) => (
+                                <select
+                                    value={
+                                        selectedBaselineId
+                                    }
+                                    onChange={(e) =>
+                                        setSelectedBaselineId(
+                                            e.target.value
+                                        )
+                                    }
+                                    disabled={
+                                        loading ||
+                                        baselines.length === 0
+                                    }
+                                >
 
-                                        <option
-                                            key={
-                                                option.value
-                                            }
-                                            value={
-                                                option.value
-                                            }
-                                        >
-                                            {
-                                                option.label
-                                            }
-                                        </option>
+                                    <option value="">
+                                        Select Baseline
+                                    </option>
 
-                                    )
-                                )}
+                                    {baselineOptions.map(
+                                        (option) => (
 
-                            </select>
+                                            <option
+                                                key={
+                                                    option.value
+                                                }
+                                                value={
+                                                    option.value
+                                                }
+                                            >
+                                                {
+                                                    option.label
+                                                }
+                                            </option>
+
+                                        )
+                                    )}
+
+                                </select>
+
+                            </div>
 
                         </div>
 
-                    </div>
-
-                )}
+                    )}
 
 
                 {/* =================================================
@@ -1320,383 +1327,58 @@ const InquiryServiceDashboard = () => {
             {showDetails &&
                 selectedItem && (
 
-                <div
-                    className="modal-overlay"
-                    onClick={() =>
-                        setShowDetails(false)
-                    }
-                >
-
                     <div
-                        className="modal-container"
-                        onClick={(e) =>
-                            e.stopPropagation()
+                        className="modal-overlay"
+                        onClick={() =>
+                            setShowDetails(false)
                         }
                     >
 
                         <div
-                            className="modal-header"
+                            className="modal-container"
+                            onClick={(e) =>
+                                e.stopPropagation()
+                            }
                         >
 
-                            <h2>
-                                {viewType ===
-                                "baseline"
-                                    ? "Baseline Details"
-                                    : "Feasibility Review Details"}
-                            </h2>
-
-                            <button
-                                type="button"
-                                className="modal-close-btn"
-                                onClick={() =>
-                                    setShowDetails(
-                                        false
-                                    )
-                                }
+                            <div
+                                className="modal-header"
                             >
-                                ✕
-                            </button>
 
-                        </div>
+                                <h2>
+                                    {viewType ===
+                                        "baseline"
+                                        ? "Baseline Details"
+                                        : "Feasibility Review Details"}
+                                </h2>
 
+                                <button
+                                    type="button"
+                                    className="modal-close-btn"
+                                    onClick={() =>
+                                        setShowDetails(
+                                            false
+                                        )
+                                    }
+                                >
+                                    ✕
+                                </button>
 
-                        <div
-                            className="modal-body"
-                        >
-
-                            {viewType ===
-                            "baseline" ? (
-
-                                <>
-                                    <div className="drawer-section">
-
-                                        <h3>
-                                            Baseline Information
-                                        </h3>
-
-                                        <div className="drawer-grid">
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Version
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.versionNumber
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Product Category
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.productCategory
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    GSM
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.finishedGsmWeight ??
-                                                        "-"
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Status
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.isActive
-                                                            ? "Active"
-                                                            : "Inactive"
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Created By
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.createdBy
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Created At
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.createdAt
-                                                            ? new Date(
-                                                                selectedItem.createdAt
-                                                            ).toLocaleString()
-                                                            : "-"
-                                                    }
-                                                </span>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
+                            </div>
 
 
-                                    <div className="drawer-section">
+                            <div
+                                className="modal-body"
+                            >
 
-                                        <h3>
-                                            Size & Color Split
-                                        </h3>
+                                {viewType ===
+                                    "baseline" ? (
 
-                                        <pre
-                                            style={{
-                                                whiteSpace:
-                                                    "pre-wrap",
-                                                wordBreak:
-                                                    "break-word",
-                                            }}
-                                        >
-                                            {JSON.stringify(
-                                                selectedItem.sizeColorSplitJson,
-                                                null,
-                                                2
-                                            )}
-                                        </pre>
-
-                                    </div>
-
-
-                                    <div className="drawer-section">
-
-                                        <h3>
-                                            Testing Requirements
-                                        </h3>
-
-                                        <p>
-                                            {
-                                                selectedItem.testingRequirements ||
-                                                "-"
-                                            }
-                                        </p>
-
-                                    </div>
-
-
-                                    <div className="drawer-section">
-
-                                        <h3>
-                                            Unclear Parameters
-                                        </h3>
-
-                                        <pre
-                                            style={{
-                                                whiteSpace:
-                                                    "pre-wrap",
-                                                wordBreak:
-                                                    "break-word",
-                                            }}
-                                        >
-                                            {selectedItem.unclearParameters
-                                                ? JSON.stringify(
-                                                    selectedItem.unclearParameters,
-                                                    null,
-                                                    2
-                                                )
-                                                : "-"}
-                                        </pre>
-
-                                    </div>
-
-
-                                    {selectedItem.feasibilityReviews &&
-                                        selectedItem.feasibilityReviews.length >
-                                            0 && (
-
+                                    <>
                                         <div className="drawer-section">
 
                                             <h3>
-                                                Feasibility Reviews
-                                            </h3>
-
-                                            {selectedItem.feasibilityReviews.map(
-                                                (review) => (
-
-                                                    <div
-                                                        key={
-                                                            review.id
-                                                        }
-                                                        style={{
-                                                            padding:
-                                                                "12px 0",
-                                                            borderBottom:
-                                                                "1px solid #eee",
-                                                        }}
-                                                    >
-
-                                                        <strong>
-                                                            {
-                                                                review.status
-                                                            }
-                                                        </strong>
-
-                                                        <div>
-                                                            {
-                                                                review.processRoute
-                                                            }
-                                                        </div>
-
-                                                        <div>
-                                                            Lead Time:{" "}
-                                                            {
-                                                                review.leadTimeDays
-                                                            }{" "}
-                                                            days
-                                                        </div>
-
-                                                    </div>
-
-                                                )
-                                            )}
-
-                                        </div>
-
-                                    )}
-
-                                </>
-
-                            ) : (
-
-                                <>
-                                    <div className="drawer-section">
-
-                                        <h3>
-                                            Review Information
-                                        </h3>
-
-                                        <div className="drawer-grid">
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Status
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.status
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Process Route
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.processRoute
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Material Basis
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.costingMaterialBasis
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Lead Time
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.leadTimeDays
-                                                    }{" "}
-                                                    days
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Evaluated By
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.evaluatedBy
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="drawer-item">
-                                                <label>
-                                                    Created At
-                                                </label>
-
-                                                <span>
-                                                    {
-                                                        selectedItem.createdAt
-                                                            ? new Date(
-                                                                selectedItem.createdAt
-                                                            ).toLocaleString()
-                                                            : "-"
-                                                    }
-                                                </span>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    <div className="drawer-section">
-
-                                        <h3>
-                                            Technical Risks
-                                        </h3>
-
-                                        <p>
-                                            {
-                                                selectedItem.technicalRisks ||
-                                                "No technical risks recorded."
-                                            }
-                                        </p>
-
-                                    </div>
-
-
-                                    {selectedItem.baselineVersion && (
-
-                                        <div className="drawer-section">
-
-                                            <h3>
-                                                Baseline Version
+                                                Baseline Information
                                             </h3>
 
                                             <div className="drawer-grid">
@@ -1708,9 +1390,7 @@ const InquiryServiceDashboard = () => {
 
                                                     <span>
                                                         {
-                                                            selectedItem
-                                                                .baselineVersion
-                                                                .versionNumber
+                                                            selectedItem.versionNumber
                                                         }
                                                     </span>
                                                 </div>
@@ -1722,9 +1402,7 @@ const InquiryServiceDashboard = () => {
 
                                                     <span>
                                                         {
-                                                            selectedItem
-                                                                .baselineVersion
-                                                                .productCategory
+                                                            selectedItem.productCategory
                                                         }
                                                     </span>
                                                 </div>
@@ -1736,9 +1414,7 @@ const InquiryServiceDashboard = () => {
 
                                                     <span>
                                                         {
-                                                            selectedItem
-                                                                .baselineVersion
-                                                                .finishedGsmWeight ??
+                                                            selectedItem.finishedGsmWeight ??
                                                             "-"
                                                         }
                                                     </span>
@@ -1746,16 +1422,42 @@ const InquiryServiceDashboard = () => {
 
                                                 <div className="drawer-item">
                                                     <label>
-                                                        Active
+                                                        Status
                                                     </label>
 
                                                     <span>
                                                         {
-                                                            selectedItem
-                                                                .baselineVersion
-                                                                .isActive
-                                                                ? "Yes"
-                                                                : "No"
+                                                            selectedItem.isActive
+                                                                ? "Active"
+                                                                : "Inactive"
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Created By
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.createdBy
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Created At
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.createdAt
+                                                                ? new Date(
+                                                                    selectedItem.createdAt
+                                                                ).toLocaleString()
+                                                                : "-"
                                                         }
                                                     </span>
                                                 </div>
@@ -1764,38 +1466,343 @@ const InquiryServiceDashboard = () => {
 
                                         </div>
 
-                                    )}
 
-                                </>
+                                        <div className="drawer-section">
 
-                            )}
+                                            <h3>
+                                                Size & Color Split
+                                            </h3>
 
-                        </div>
+                                            <pre
+                                                style={{
+                                                    whiteSpace:
+                                                        "pre-wrap",
+                                                    wordBreak:
+                                                        "break-word",
+                                                }}
+                                            >
+                                                {JSON.stringify(
+                                                    selectedItem.sizeColorSplitJson,
+                                                    null,
+                                                    2
+                                                )}
+                                            </pre>
+
+                                        </div>
 
 
-                        <div
-                            className="modal-footer"
-                        >
+                                        <div className="drawer-section">
 
-                            <button
-                                type="button"
-                                className="secondary-btn"
-                                onClick={() =>
-                                    setShowDetails(
-                                        false
-                                    )
-                                }
+                                            <h3>
+                                                Testing Requirements
+                                            </h3>
+
+                                            <p>
+                                                {
+                                                    selectedItem.testingRequirements ||
+                                                    "-"
+                                                }
+                                            </p>
+
+                                        </div>
+
+
+                                        <div className="drawer-section">
+
+                                            <h3>
+                                                Unclear Parameters
+                                            </h3>
+
+                                            <pre
+                                                style={{
+                                                    whiteSpace:
+                                                        "pre-wrap",
+                                                    wordBreak:
+                                                        "break-word",
+                                                }}
+                                            >
+                                                {selectedItem.unclearParameters
+                                                    ? JSON.stringify(
+                                                        selectedItem.unclearParameters,
+                                                        null,
+                                                        2
+                                                    )
+                                                    : "-"}
+                                            </pre>
+
+                                        </div>
+
+
+                                        {selectedItem.feasibilityReviews &&
+                                            selectedItem.feasibilityReviews.length >
+                                            0 && (
+
+                                                <div className="drawer-section">
+
+                                                    <h3>
+                                                        Feasibility Reviews
+                                                    </h3>
+
+                                                    {selectedItem.feasibilityReviews.map(
+                                                        (review) => (
+
+                                                            <div
+                                                                key={
+                                                                    review.id
+                                                                }
+                                                                style={{
+                                                                    padding:
+                                                                        "12px 0",
+                                                                    borderBottom:
+                                                                        "1px solid #eee",
+                                                                }}
+                                                            >
+
+                                                                <strong>
+                                                                    {
+                                                                        review.status
+                                                                    }
+                                                                </strong>
+
+                                                                <div>
+                                                                    {
+                                                                        review.processRoute
+                                                                    }
+                                                                </div>
+
+                                                                <div>
+                                                                    Lead Time:{" "}
+                                                                    {
+                                                                        review.leadTimeDays
+                                                                    }{" "}
+                                                                    days
+                                                                </div>
+
+                                                            </div>
+
+                                                        )
+                                                    )}
+
+                                                </div>
+
+                                            )}
+
+                                    </>
+
+                                ) : (
+
+                                    <>
+                                        <div className="drawer-section">
+
+                                            <h3>
+                                                Review Information
+                                            </h3>
+
+                                            <div className="drawer-grid">
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Status
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.status
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Process Route
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.processRoute
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Material Basis
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.costingMaterialBasis
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Lead Time
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.leadTimeDays
+                                                        }{" "}
+                                                        days
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Evaluated By
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.evaluatedBy
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="drawer-item">
+                                                    <label>
+                                                        Created At
+                                                    </label>
+
+                                                    <span>
+                                                        {
+                                                            selectedItem.createdAt
+                                                                ? new Date(
+                                                                    selectedItem.createdAt
+                                                                ).toLocaleString()
+                                                                : "-"
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div className="drawer-section">
+
+                                            <h3>
+                                                Technical Risks
+                                            </h3>
+
+                                            <p>
+                                                {
+                                                    selectedItem.technicalRisks ||
+                                                    "No technical risks recorded."
+                                                }
+                                            </p>
+
+                                        </div>
+
+
+                                        {selectedItem.baselineVersion && (
+
+                                            <div className="drawer-section">
+
+                                                <h3>
+                                                    Baseline Version
+                                                </h3>
+
+                                                <div className="drawer-grid">
+
+                                                    <div className="drawer-item">
+                                                        <label>
+                                                            Version
+                                                        </label>
+
+                                                        <span>
+                                                            {
+                                                                selectedItem
+                                                                    .baselineVersion
+                                                                    .versionNumber
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="drawer-item">
+                                                        <label>
+                                                            Product Category
+                                                        </label>
+
+                                                        <span>
+                                                            {
+                                                                selectedItem
+                                                                    .baselineVersion
+                                                                    .productCategory
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="drawer-item">
+                                                        <label>
+                                                            GSM
+                                                        </label>
+
+                                                        <span>
+                                                            {
+                                                                selectedItem
+                                                                    .baselineVersion
+                                                                    .finishedGsmWeight ??
+                                                                "-"
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="drawer-item">
+                                                        <label>
+                                                            Active
+                                                        </label>
+
+                                                        <span>
+                                                            {
+                                                                selectedItem
+                                                                    .baselineVersion
+                                                                    .isActive
+                                                                    ? "Yes"
+                                                                    : "No"
+                                                            }
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        )}
+
+                                    </>
+
+                                )}
+
+                            </div>
+
+
+                            <div
+                                className="modal-footer"
                             >
-                                Close
-                            </button>
+
+                                <button
+                                    type="button"
+                                    className="secondary-btn"
+                                    onClick={() =>
+                                        setShowDetails(
+                                            false
+                                        )
+                                    }
+                                >
+                                    Close
+                                </button>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
-
-            )}
+                )}
 
         </div>
     );

@@ -1,23 +1,61 @@
+/* ============================================================
+   MODAL OVERLAY
+============================================================ */
+
 .modal-overlay {
     position: fixed;
     inset: 0;
+
     background: rgba(15, 23, 42, 0.55);
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     z-index: 999;
+
     padding: 20px;
+
+    /* Prevent the page behind the modal from scrolling */
+    overflow: hidden;
 }
+
+
+/* ============================================================
+   MODAL CONTAINER
+============================================================ */
 
 .modal-container {
     width: 100%;
     max-width: 720px;
-    background: #fff;
+
+    /*
+     * IMPORTANT:
+     * Do not use a fixed height here.
+     *
+     * Small forms will stay compact.
+     * Large forms will be limited by max-height.
+     */
+    max-height: 90vh;
+
+    background: #ffffff;
+
     border-radius: 12px;
+
+    display: flex;
+    flex-direction: column;
+
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .25);
-    animation: modalFade .2s ease;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+
+    animation: modalFade 0.2s ease;
 }
+
+
+/* ============================================================
+   MODAL ANIMATION
+============================================================ */
 
 @keyframes modalFade {
     from {
@@ -31,37 +69,132 @@
     }
 }
 
+
+/* ============================================================
+   MODAL HEADER
+============================================================ */
+
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     padding: 18px 24px;
+
     border-bottom: 1px solid #e2e8f0;
+
+    /*
+     * Header should never shrink when the form is large.
+     */
+    flex-shrink: 0;
 }
 
 .modal-header h2 {
     margin: 0;
+
     font-size: 22px;
+
     color: #1e293b;
 }
 
 .modal-close-btn {
     background: transparent;
+
     border: none;
+
     font-size: 22px;
+
     cursor: pointer;
+
     color: #64748b;
 }
 
+
+/* ============================================================
+   MODAL BODY
+============================================================ */
+
 .modal-body {
     padding: 24px;
+
+    /*
+     * Let small forms use their natural height.
+     */
+    flex: 0 1 auto;
+
+    min-height: 0;
+
+    /*
+     * This is the maximum usable form area.
+     *
+     * If the form is smaller than this:
+     *   -> no scrolling
+     *
+     * If the form is larger:
+     *   -> body scrolls
+     */
+    max-height: calc(90vh - 150px);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior: contain;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9;
 }
+
+
+/* ============================================================
+   MODAL BODY SCROLLBAR
+============================================================ */
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+
+/* ============================================================
+   FORM
+============================================================ */
+
+.modal-body form {
+    min-height: 0;
+}
+
+
+/* ============================================================
+   FORM GRID
+============================================================ */
 
 .form-grid {
     display: grid;
+
     grid-template-columns: repeat(2, 1fr);
+
     gap: 18px;
 }
+
+
+/* ============================================================
+   FORM GROUP
+============================================================ */
 
 .form-group {
     display: flex;
@@ -70,29 +203,62 @@
 
 .form-group label {
     margin-bottom: 6px;
+
     font-size: 14px;
+
     font-weight: 600;
+
     color: #334155;
 }
 
-.form-group input {
+
+/* ============================================================
+   FORM INPUTS
+============================================================ */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
     padding: 10px 12px;
+
     border: 1px solid #cbd5e1;
+
     border-radius: 8px;
+
     font-size: 14px;
+
     outline: none;
-    transition: .2s;
+
+    transition: 0.2s;
+
+    box-sizing: border-box;
+
+    width: 100%;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
     border-color: #2563eb;
 }
 
+
+/* ============================================================
+   FORM ERROR
+============================================================ */
+
 .form-error {
     margin-top: 5px;
+
     color: #dc2626;
+
     font-size: 12px;
 }
+
+
+/* ============================================================
+   CHECKBOX SECTION
+============================================================ */
 
 .checkbox-section {
     margin-top: 28px;
@@ -100,51 +266,87 @@
 
 .checkbox-section h3 {
     margin-bottom: 15px;
+
     color: #1e293b;
+
     font-size: 17px;
 }
 
 .checkbox-grid {
     display: grid;
+
     grid-template-columns: repeat(2, 1fr);
+
     gap: 14px;
 }
 
 .checkbox-item {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     cursor: pointer;
+
     font-size: 14px;
+
     color: #334155;
 }
 
 .checkbox-item input {
     width: 18px;
+
     height: 18px;
 }
 
+
+/* ============================================================
+   MODAL FOOTER
+============================================================ */
+
 .modal-footer {
     display: flex;
+
     justify-content: flex-end;
+
     gap: 12px;
+
     padding: 18px 24px;
+
     border-top: 1px solid #e2e8f0;
+
+    /*
+     * Footer must remain visible.
+     */
+    flex-shrink: 0;
 }
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
 
 .primary-btn,
 .secondary-btn {
     border: none;
+
     border-radius: 8px;
+
     padding: 10px 18px;
+
     cursor: pointer;
+
     font-size: 14px;
+
     font-weight: 600;
-    transition: .2s;
+
+    transition: 0.2s;
 }
 
 .primary-btn {
     background: #2563eb;
+
     color: white;
 }
 
@@ -154,6 +356,7 @@
 
 .secondary-btn {
     background: #e2e8f0;
+
     color: #334155;
 }
 
@@ -163,11 +366,21 @@
 
 .primary-btn:disabled,
 .secondary-btn:disabled {
-    opacity: .6;
+    opacity: 0.6;
+
     cursor: not-allowed;
 }
 
-@media (max-width:768px) {
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .modal-overlay {
+        padding: 12px;
+    }
 
     .form-grid,
     .checkbox-grid {
@@ -175,7 +388,24 @@
     }
 
     .modal-container {
+        width: 100%;
+
+        max-width: 100%;
+
         max-height: 95vh;
-        overflow-y: auto;
+    }
+
+    .modal-body {
+        max-height: calc(95vh - 140px);
+
+        padding: 20px;
+    }
+
+    .modal-header {
+        padding: 16px 20px;
+    }
+
+    .modal-footer {
+        padding: 16px 20px;
     }
 }
