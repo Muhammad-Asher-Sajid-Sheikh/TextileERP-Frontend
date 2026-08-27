@@ -551,7 +551,7 @@ const SampleServiceDashboard = () => {
             label: "Counter Sample Bin Location",
             type: "text",
             required: true,
-            placeholder: "Auto-generated, editable",
+            placeholder: "e.g. BIN-A-42",
         },
 
         {
@@ -575,7 +575,7 @@ const SampleServiceDashboard = () => {
             label: "Courier Tracking No.",
             type: "text",
             required: false,
-            placeholder: "Auto-generated, editable",
+            placeholder: "e.g. DHL-123456789",
         },
 
         {
@@ -624,7 +624,7 @@ const SampleServiceDashboard = () => {
             label: "Courier Tracking No.",
             type: "text",
             required: false,
-            placeholder: "Auto-generated, editable",
+            placeholder: "e.g. DHL-123456789",
         },
     ];
 
@@ -955,6 +955,34 @@ const SampleServiceDashboard = () => {
         }
     };
 
+    const generateBinLocation = () => {
+        const date = new Date();
+
+        const datePart =
+            date.getFullYear().toString() +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            String(date.getDate()).padStart(2, "0");
+
+        const randomPart =
+            Math.floor(100 + Math.random() * 900);
+
+        return `BIN-A-${datePart}-${randomPart}`;
+    };
+
+
+    const generateCourierTrackingNo = () => {
+        const date = new Date();
+
+        const datePart =
+            date.getFullYear().toString() +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            String(date.getDate()).padStart(2, "0");
+
+        const randomPart =
+            Math.floor(100000 + Math.random() * 900000);
+
+        return `TRK-${datePart}-${randomPart}`;
+    };
 
     /* ========================================================
        OPEN ADD SAMPLE
@@ -971,18 +999,22 @@ const SampleServiceDashboard = () => {
             return;
         }
 
+        const generatedBinLocation =
+            generateBinLocation();
+
+        const generatedCourierTrackingNo =
+            generateCourierTrackingNo();
+
         setModalType("sample");
 
         setFormMode("add");
 
         setSelectedItem({
-
             counterSampleBinLocation:
-                generateBinLocation(),
+                generatedBinLocation,
 
             courierTrackingNo:
-                generateTrackingNumber(),
-
+                generatedCourierTrackingNo,
         });
 
         setShowFormModal(true);
