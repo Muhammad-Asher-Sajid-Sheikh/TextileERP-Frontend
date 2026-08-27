@@ -17,6 +17,8 @@ import {
 
     addSampleLedgerCost,
     getSampleLedgerCosts,
+
+    getAllUsers,
 } from "../../services/marketingApi";
 
 import CrudToolbar from "../../components/common/marketing/CrudToolbar";
@@ -94,143 +96,143 @@ const ledgerCostColumns = [
    SAMPLE FORM FIELDS
 ============================================================ */
 
-const sampleFields = [
-    {
-        name: "sampleType",
-        label: "Sample Type",
-        type: "select",
-        required: true,
-        placeholder: "Select sample type",
-        options: [
-            {
-                value: "DEVELOPMENT",
-                label: "Development",
-            },
-            {
-                value: "PROTO",
-                label: "Proto",
-            },
-            {
-                value: "FIT",
-                label: "Fit",
-            },
-            {
-                value: "PHOTO",
-                label: "Photo",
-            },
-            {
-                value: "COUNTER",
-                label: "Counter",
-            },
-            {
-                value: "PRE_PRODUCTION",
-                label: "Pre Production",
-            },
-        ],
-    },
+// const sampleFields = [
+//     {
+//         name: "sampleType",
+//         label: "Sample Type",
+//         type: "select",
+//         required: true,
+//         placeholder: "Select sample type",
+//         options: [
+//             {
+//                 value: "DEVELOPMENT",
+//                 label: "Development",
+//             },
+//             {
+//                 value: "PROTO",
+//                 label: "Proto",
+//             },
+//             {
+//                 value: "FIT",
+//                 label: "Fit",
+//             },
+//             {
+//                 value: "PHOTO",
+//                 label: "Photo",
+//             },
+//             {
+//                 value: "COUNTER",
+//                 label: "Counter",
+//             },
+//             {
+//                 value: "PRE_PRODUCTION",
+//                 label: "Pre Production",
+//             },
+//         ],
+//     },
 
-    {
-        name: "pricingPosition",
-        label: "Pricing Position",
-        type: "select",
-        required: true,
-        placeholder: "Select pricing position",
-        options: [
-            {
-                value: "PAID_BY_CUSTOMER",
-                label: "Paid by Customer",
-            },
-            {
-                value: "FREE_OF_COST",
-                label: "Free of Cost",
-            },
-            {
-                value: "REIMBURSABLE_ON_ORDER",
-                label: "Reimbursable on Order",
-            },
-        ],
-    },
+//     {
+//         name: "pricingPosition",
+//         label: "Pricing Position",
+//         type: "select",
+//         required: true,
+//         placeholder: "Select pricing position",
+//         options: [
+//             {
+//                 value: "PAID_BY_CUSTOMER",
+//                 label: "Paid by Customer",
+//             },
+//             {
+//                 value: "FREE_OF_COST",
+//                 label: "Free of Cost",
+//             },
+//             {
+//                 value: "REIMBURSABLE_ON_ORDER",
+//                 label: "Reimbursable on Order",
+//             },
+//         ],
+//     },
 
-    {
-        name: "counterSampleBinLocation",
-        label: "Counter Sample Bin Location",
-        type: "text",
-        required: true,
-        placeholder: "e.g. BIN-A-42",
-    },
+//     {
+//         name: "counterSampleBinLocation",
+//         label: "Counter Sample Bin Location",
+//         type: "text",
+//         required: true,
+//         placeholder: "e.g. BIN-A-42",
+//     },
 
-    {
-        name: "isPhotoSampleDisclaimerSigned",
-        label: "Photo Sample Disclaimer Signed",
-        type: "checkbox",
-        required: false,
-    },
+//     {
+//         name: "isPhotoSampleDisclaimerSigned",
+//         label: "Photo Sample Disclaimer Signed",
+//         type: "checkbox",
+//         required: false,
+//     },
 
-    {
-        name: "dispatchApproverId",
-        label: "Dispatch Approver ID",
-        type: "text",
-        required: false,
-        placeholder: "Optional user ID",
-    },
+//     {
+//         name: "dispatchApproverId",
+//         label: "Dispatch Approver ID",
+//         type: "text",
+//         required: false,
+//         placeholder: "Optional user ID",
+//     },
 
-    {
-        name: "courierTrackingNo",
-        label: "Courier Tracking No.",
-        type: "text",
-        required: false,
-        placeholder: "e.g. DHL-123456789",
-    },
+//     {
+//         name: "courierTrackingNo",
+//         label: "Courier Tracking No.",
+//         type: "text",
+//         required: false,
+//         placeholder: "e.g. DHL-123456789",
+//     },
 
-    {
-        name: "customerOutcome",
-        label: "Customer Outcome",
-        type: "select",
-        required: false,
-        placeholder: "Select customer outcome",
-        options: [
-            {
-                value: "RESPONSE_PENDING",
-                label: "Response Pending",
-            },
-            {
-                value: "APPROVED",
-                label: "Approved",
-            },
-            {
-                value: "REJECTED",
-                label: "Rejected",
-            },
-            {
-                value: "REVISION_REQUESTED",
-                label: "Revision Requested",
-            },
-        ],
-    },
-];
+//     {
+//         name: "customerOutcome",
+//         label: "Customer Outcome",
+//         type: "select",
+//         required: false,
+//         placeholder: "Select customer outcome",
+//         options: [
+//             {
+//                 value: "RESPONSE_PENDING",
+//                 label: "Response Pending",
+//             },
+//             {
+//                 value: "APPROVED",
+//                 label: "Approved",
+//             },
+//             {
+//                 value: "REJECTED",
+//                 label: "Rejected",
+//             },
+//             {
+//                 value: "REVISION_REQUESTED",
+//                 label: "Revision Requested",
+//             },
+//         ],
+//     },
+// ];
 
 
 /* ============================================================
    DISPATCH APPROVAL FIELDS
 ============================================================ */
 
-const dispatchApprovalFields = [
-    {
-        name: "dispatchApproverId",
-        label: "Dispatch Approver ID",
-        type: "text",
-        required: true,
-        placeholder: "Enter user ID",
-    },
+// const dispatchApprovalFields = [
+//     {
+//         name: "dispatchApproverId",
+//         label: "Dispatch Approver ID",
+//         type: "text",
+//         required: true,
+//         placeholder: "Enter user ID",
+//     },
 
-    {
-        name: "courierTrackingNo",
-        label: "Courier Tracking No.",
-        type: "text",
-        required: false,
-        placeholder: "Optional tracking number",
-    },
-];
+//     {
+//         name: "courierTrackingNo",
+//         label: "Courier Tracking No.",
+//         type: "text",
+//         required: false,
+//         placeholder: "Optional tracking number",
+//     },
+// ];
 
 
 /* ============================================================
@@ -285,6 +287,55 @@ const ledgerCostFields = [
     },
 ];
 
+/* ============================================================
+   AUTO GENERATED SAMPLE VALUES
+============================================================ */
+
+const generateRandomNumber = (length = 4) => {
+    return Math.floor(
+        Math.random() * Math.pow(10, length)
+    )
+        .toString()
+        .padStart(length, "0");
+};
+
+
+const generateBinLocation = () => {
+
+    const date = new Date();
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(date.getMonth() + 1)
+            .padStart(2, "0");
+
+    const day =
+        String(date.getDate())
+            .padStart(2, "0");
+
+    return `BIN-${year}${month}${day}-${generateRandomNumber(4)}`;
+};
+
+
+const generateTrackingNumber = () => {
+
+    const date = new Date();
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(date.getMonth() + 1)
+            .padStart(2, "0");
+
+    const day =
+        String(date.getDate())
+            .padStart(2, "0");
+
+    return `TRK-${year}${month}${day}-${generateRandomNumber(6)}`;
+};
 
 /* ============================================================
    COMPONENT
@@ -303,6 +354,13 @@ const SampleServiceDashboard = () => {
 
 
     /* --------------------------------------------------------
+   USERS
+-------------------------------------------------------- */
+
+    const [users, setUsers] = useState([]);
+
+
+    /* --------------------------------------------------------
        SAMPLES
     -------------------------------------------------------- */
 
@@ -318,6 +376,7 @@ const SampleServiceDashboard = () => {
 
     const [ledgerCosts, setLedgerCosts] =
         useState([]);
+
 
 
     /* --------------------------------------------------------
@@ -395,7 +454,210 @@ const SampleServiceDashboard = () => {
 
     }, [inquiries]);
 
+    /* ========================================================
+   USER OPTIONS
+======================================================== */
 
+    const userOptions = useMemo(() => {
+
+        return users.map((user) => {
+
+            const name =
+                user.name ||
+                user.username ||
+                "Unnamed User";
+
+            const email =
+                user.email ||
+                "";
+
+            return {
+                value: user.id,
+
+                label:
+                    email
+                        ? `${name} - ${email}`
+                        : name,
+            };
+
+        });
+
+    }, [users]);
+
+
+    /* ========================================================
+   DYNAMIC SAMPLE FORM FIELDS
+======================================================== */
+
+    const activeSampleFields = [
+        {
+            name: "sampleType",
+            label: "Sample Type",
+            type: "select",
+            required: true,
+            placeholder: "Select sample type",
+            options: [
+                {
+                    value: "DEVELOPMENT",
+                    label: "Development",
+                },
+                {
+                    value: "PROTO",
+                    label: "Proto",
+                },
+                {
+                    value: "FIT",
+                    label: "Fit",
+                },
+                {
+                    value: "PHOTO",
+                    label: "Photo",
+                },
+                {
+                    value: "COUNTER",
+                    label: "Counter",
+                },
+                {
+                    value: "PRE_PRODUCTION",
+                    label: "Pre Production",
+                },
+            ],
+        },
+
+        {
+            name: "pricingPosition",
+            label: "Pricing Position",
+            type: "select",
+            required: true,
+            placeholder: "Select pricing position",
+            options: [
+                {
+                    value: "PAID_BY_CUSTOMER",
+                    label: "Paid by Customer",
+                },
+                {
+                    value: "FREE_OF_COST",
+                    label: "Free of Cost",
+                },
+                {
+                    value: "REIMBURSABLE_ON_ORDER",
+                    label: "Reimbursable on Order",
+                },
+            ],
+        },
+
+        {
+            name: "counterSampleBinLocation",
+            label: "Counter Sample Bin Location",
+            type: "text",
+            required: true,
+            placeholder: "e.g. BIN-A-42",
+        },
+
+        {
+            name: "isPhotoSampleDisclaimerSigned",
+            label: "Photo Sample Disclaimer Signed",
+            type: "checkbox",
+            required: false,
+        },
+
+        {
+            name: "dispatchApproverId",
+            label: "Dispatch Approver",
+            type: "select",
+            required: false,
+            placeholder: "Select dispatch approver",
+            options: userOptions,
+        },
+
+        {
+            name: "courierTrackingNo",
+            label: "Courier Tracking No.",
+            type: "text",
+            required: false,
+            placeholder: "e.g. DHL-123456789",
+        },
+
+        {
+            name: "customerOutcome",
+            label: "Customer Outcome",
+            type: "select",
+            required: false,
+            placeholder: "Select customer outcome",
+            options: [
+                {
+                    value: "RESPONSE_PENDING",
+                    label: "Response Pending",
+                },
+                {
+                    value: "APPROVED",
+                    label: "Approved",
+                },
+                {
+                    value: "REJECTED",
+                    label: "Rejected",
+                },
+                {
+                    value: "REVISION_REQUESTED",
+                    label: "Revision Requested",
+                },
+            ],
+        },
+    ];
+
+    /* ========================================================
+   DYNAMIC DISPATCH APPROVAL FIELDS
+======================================================== */
+
+    const activeDispatchApprovalFields = [
+        {
+            name: "dispatchApproverId",
+            label: "Dispatch Approver",
+            type: "select",
+            required: true,
+            placeholder: "Select dispatch approver",
+            options: userOptions,
+        },
+
+        {
+            name: "courierTrackingNo",
+            label: "Courier Tracking No.",
+            type: "text",
+            required: false,
+            placeholder: "e.g. DHL-123456789",
+        },
+    ];
+
+    /* ========================================================
+   LOAD USERS
+======================================================== */
+
+    const loadUsers = async () => {
+
+        try {
+
+            const response =
+                await getAllUsers();
+
+            const data =
+                response?.data || [];
+
+            setUsers(data);
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load users:",
+                error
+            );
+
+            toast.error(
+                "Failed to load users."
+            );
+
+            setUsers([]);
+        }
+    };
     /* ========================================================
        LOAD INQUIRIES
     ======================================================== */
@@ -546,6 +808,7 @@ const SampleServiceDashboard = () => {
     useEffect(() => {
 
         loadInquiries();
+        loadUsers();
 
     }, []);
 
@@ -692,6 +955,34 @@ const SampleServiceDashboard = () => {
         }
     };
 
+    const generateBinLocation = () => {
+        const date = new Date();
+
+        const datePart =
+            date.getFullYear().toString() +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            String(date.getDate()).padStart(2, "0");
+
+        const randomPart =
+            Math.floor(100 + Math.random() * 900);
+
+        return `BIN-A-${datePart}-${randomPart}`;
+    };
+
+
+    const generateCourierTrackingNo = () => {
+        const date = new Date();
+
+        const datePart =
+            date.getFullYear().toString() +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            String(date.getDate()).padStart(2, "0");
+
+        const randomPart =
+            Math.floor(100000 + Math.random() * 900000);
+
+        return `TRK-${datePart}-${randomPart}`;
+    };
 
     /* ========================================================
        OPEN ADD SAMPLE
@@ -708,11 +999,23 @@ const SampleServiceDashboard = () => {
             return;
         }
 
+        const generatedBinLocation =
+            generateBinLocation();
+
+        const generatedCourierTrackingNo =
+            generateCourierTrackingNo();
+
         setModalType("sample");
 
         setFormMode("add");
 
-        setSelectedItem(null);
+        setSelectedItem({
+            counterSampleBinLocation:
+                generatedBinLocation,
+
+            courierTrackingNo:
+                generatedCourierTrackingNo,
+        });
 
         setShowFormModal(true);
     };
@@ -895,21 +1198,22 @@ const SampleServiceDashboard = () => {
             return;
         }
 
-        setModalType(
-            "dispatch"
-        );
+        setModalType("dispatch");
 
-        setFormMode(
-            "add"
-        );
+        setFormMode("add");
 
-        setSelectedItem(
-            null
-        );
+        setSelectedItem({
 
-        setShowFormModal(
-            true
-        );
+            dispatchApproverId:
+                "",
+
+            courierTrackingNo:
+                selectedSample.courierTrackingNo ||
+                generateTrackingNumber(),
+
+        });
+
+        setShowFormModal(true);
     };
 
 
@@ -1279,18 +1583,18 @@ const SampleServiceDashboard = () => {
 
     const activeFormFields =
         modalType === "sample"
-            ? sampleFields
+            ? activeSampleFields
             : modalType === "dispatch"
-            ? dispatchApprovalFields
-            : ledgerCostFields;
+                ? activeDispatchApprovalFields
+                : ledgerCostFields;
 
 
     const activeFormTitle =
         modalType === "sample"
             ? "Sample"
             : modalType === "dispatch"
-            ? "Dispatch Approval"
-            : "Ledger Cost";
+                ? "Dispatch Approval"
+                : "Ledger Cost";
 
 
     /* ========================================================
@@ -1657,7 +1961,7 @@ const SampleServiceDashboard = () => {
                                 <h2>
                                     {
                                         activeType ===
-                                        "sample"
+                                            "sample"
                                             ? "Samples"
                                             : "Ledger Costs"
                                     }
@@ -1667,7 +1971,7 @@ const SampleServiceDashboard = () => {
 
                                     {
                                         activeType ===
-                                        "sample"
+                                            "sample"
                                             ? `${samples.length} sample(s) found`
                                             : `${ledgerCosts.length} ledger cost record(s) found`
                                     }
@@ -1696,7 +2000,7 @@ const SampleServiceDashboard = () => {
                                     }
                                     placeholder={
                                         activeType ===
-                                        "sample"
+                                            "sample"
                                             ? "Search samples..."
                                             : "Search ledger costs..."
                                     }
@@ -1714,57 +2018,57 @@ const SampleServiceDashboard = () => {
                         {activeType ===
                             "sample" && (
 
-                            <>
+                                <>
 
-                                <CrudTable
-                                    columns={
-                                        columns
-                                    }
-                                    data={
-                                        filteredData
-                                    }
-                                    onView={
-                                        handleView
-                                    }
-                                    onEdit={
-                                        handleEdit
-                                    }
-                                    onDelete={
-                                        handleDelete
-                                    }
-                                />
+                                    <CrudTable
+                                        columns={
+                                            columns
+                                        }
+                                        data={
+                                            filteredData
+                                        }
+                                        onView={
+                                            handleView
+                                        }
+                                        onEdit={
+                                            handleEdit
+                                        }
+                                        onDelete={
+                                            handleDelete
+                                        }
+                                    />
 
 
-                                {samples.length ===
-                                    0 && (
+                                    {samples.length ===
+                                        0 && (
 
-                                    <div
-                                        className="empty-state"
-                                    >
+                                            <div
+                                                className="empty-state"
+                                            >
 
-                                        <h3>
-                                            No Samples Found
-                                        </h3>
+                                                <h3>
+                                                    No Samples Found
+                                                </h3>
 
-                                        <p>
-                                            This inquiry does not
-                                            have any samples yet.
-                                        </p>
+                                                <p>
+                                                    This inquiry does not
+                                                    have any samples yet.
+                                                </p>
 
-                                        <button
-                                            className="primary-btn"
-                                            onClick={
-                                                openAddSampleModal
-                                            }
-                                        >
-                                            Create Sample
-                                        </button>
+                                                <button
+                                                    className="primary-btn"
+                                                    onClick={
+                                                        openAddSampleModal
+                                                    }
+                                                >
+                                                    Create Sample
+                                                </button>
 
-                                    </div>
-                                )}
+                                            </div>
+                                        )}
 
-                            </>
-                        )}
+                                </>
+                            )}
 
 
                         {/* --------------------------------------
@@ -1774,83 +2078,83 @@ const SampleServiceDashboard = () => {
                         {activeType ===
                             "ledgerCost" && (
 
-                            <>
+                                <>
 
-                                {!selectedSample && (
+                                    {!selectedSample && (
 
-                                    <div
-                                        className="empty-state"
-                                    >
+                                        <div
+                                            className="empty-state"
+                                        >
 
-                                        <h3>
-                                            Select a Sample
-                                        </h3>
+                                            <h3>
+                                                Select a Sample
+                                            </h3>
 
-                                        <p>
-                                            Select a sample above
-                                            to view its ledger costs.
-                                        </p>
+                                            <p>
+                                                Select a sample above
+                                                to view its ledger costs.
+                                            </p>
 
-                                    </div>
-                                )}
-
-
-                                {selectedSample && (
-
-                                    <>
-
-                                        <CrudTable
-                                            columns={
-                                                ledgerCostColumns
-                                            }
-                                            data={
-                                                filteredData
-                                            }
-                                            onView={
-                                                () => {}
-                                            }
-                                            onEdit={
-                                                () => {}
-                                            }
-                                            onDelete={
-                                                () => {}
-                                            }
-                                        />
+                                        </div>
+                                    )}
 
 
-                                        {ledgerCosts.length ===
-                                            0 && (
+                                    {selectedSample && (
 
-                                            <div
-                                                className="empty-state"
-                                            >
+                                        <>
 
-                                                <h3>
-                                                    No Ledger Costs Found
-                                                </h3>
+                                            <CrudTable
+                                                columns={
+                                                    ledgerCostColumns
+                                                }
+                                                data={
+                                                    filteredData
+                                                }
+                                                onView={
+                                                    () => { }
+                                                }
+                                                onEdit={
+                                                    () => { }
+                                                }
+                                                onDelete={
+                                                    () => { }
+                                                }
+                                            />
 
-                                                <p>
-                                                    This sample does not
-                                                    have any ledger costs.
-                                                </p>
 
-                                                <button
-                                                    className="primary-btn"
-                                                    onClick={
-                                                        openAddLedgerCostModal
-                                                    }
-                                                >
-                                                    Add Ledger Cost
-                                                </button>
+                                            {ledgerCosts.length ===
+                                                0 && (
 
-                                            </div>
-                                        )}
+                                                    <div
+                                                        className="empty-state"
+                                                    >
 
-                                    </>
-                                )}
+                                                        <h3>
+                                                            No Ledger Costs Found
+                                                        </h3>
 
-                            </>
-                        )}
+                                                        <p>
+                                                            This sample does not
+                                                            have any ledger costs.
+                                                        </p>
+
+                                                        <button
+                                                            className="primary-btn"
+                                                            onClick={
+                                                                openAddLedgerCostModal
+                                                            }
+                                                        >
+                                                            Add Ledger Cost
+                                                        </button>
+
+                                                    </div>
+                                                )}
+
+                                        </>
+                                    )}
+
+                                </>
+                            )}
 
                     </>
                 )
