@@ -468,6 +468,93 @@ export const updateSalesContractSignedCopy = async (
     return response.data;
 };
 
+
+// ==========================================
+// SALES ORDERS
+// ==========================================
+
+export const getAllSalesOrders = async () => {
+    const response = await api.get("/api/marketing/sales-orders");
+    return response.data;
+};
+
+export const activateSalesOrder = async (data) => {
+    const response = await api.post(
+        "/api/marketing/sales-orders/activate",
+        data
+    );
+
+    return response.data;
+};
+
+export const getSalesOrderById = async (id) => {
+    const response = await api.get(
+        `/api/marketing/sales-orders/${id}`
+    );
+
+    return response.data;
+};
+
+export const updateSalesOrderQuantities = async (id, data) => {
+    const response = await api.patch(
+        `/api/marketing/sales-orders/${id}/quantities`,
+        data
+    );
+
+    return response.data;
+};
+
+
+// ==========================================
+// SALES ORDER BOM
+// ==========================================
+
+export const getBomsByOrderId = async (orderId) => {
+    const response = await api.get(
+        `/api/marketing/sales-orders/${orderId}/boms`
+    );
+
+    return response.data;
+};
+
+export const createOrderBom = async (orderId, data) => {
+    const response = await api.post(
+        `/api/marketing/sales-orders/${orderId}/boms`,
+        data
+    );
+
+    return response.data;
+};
+
+export const getOrderBomById = async (bomId) => {
+    const response = await api.get(
+        `/api/marketing/order-boms/${bomId}`
+    );
+
+    return response.data;
+};
+
+export const addYarnDetailToBom = async (bomId, data) => {
+    const response = await api.post(
+        `/api/marketing/order-boms/${bomId}/yarn-details`,
+        data
+    );
+
+    return response.data;
+};
+
+export const updateYarnDetail = async (yarnDetailId, data) => {
+    const response = await api.patch(
+        `/api/marketing/order-boms/yarn-details/${yarnDetailId}`,
+        data
+    );
+
+    return response.data;
+};
+
+
+
+
 // ============================================================
 // DUMMY USERS
 // TODO: Replace with real users API when available
