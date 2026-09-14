@@ -10,11 +10,12 @@ const CrudTable = ({
     onEdit,
     onDelete,
 }) => {
+
     if (loading) {
         return (
             <div className="dashboard-table-wrapper">
                 <div className="dashboard-empty-state">
-                    Loading parties...
+                    Loading...
                 </div>
             </div>
         );
@@ -33,6 +34,7 @@ const CrudTable = ({
     return (
         <div className="dashboard-table-wrapper">
             <table className="dashboard-table">
+
                 <thead>
                     <tr>
                         {columns.map((column) => (
@@ -59,6 +61,7 @@ const CrudTable = ({
                         />
                     ))}
                 </tbody>
+
             </table>
         </div>
     );

@@ -11,6 +11,8 @@ import {
     activateSalesOrder,
     getSalesOrderById,
     updateSalesOrderQuantities,
+    getAllPOs,
+    getSalesContractsByPo,
 } from "../../services/marketingApi";
 
 import CrudTable from "../../components/common/marketing/CrudTable";
@@ -26,128 +28,135 @@ import "../../styles/marketing/partyService/dashboard.css";
 const salesOrderColumns = [
     {
         key: "atxIonNumber",
-        label: "ATX/ION",
+        label: "ATX / ION",
+    },
+
+    {
+        key: "salesContract",
+        label: "Sales Contract",
+        render: (row) =>
+            row?.salesContract?.salesContractNumber ||
+            "-",
+    },
+
+    {
+        key: "orderToken",
+        label: "Order Token",
+        render: (row) =>
+            row?.orderToken?.orderNumber ||
+            row?.orderTokenId ||
+            "-",
     },
 
     {
         key: "contractOrderedQty",
         label: "Contract Qty",
-        render: (value) =>
-            value !== null &&
-            value !== undefined
-                ? value
-                : "-",
+        render: (row) =>
+            row?.contractOrderedQty ??
+            "-",
     },
 
     {
         key: "minusTolerancePct",
         label: "- Tol. %",
-        render: (value) =>
-            value !== null &&
-            value !== undefined
-                ? `${value}%`
+        render: (row) =>
+            row?.minusTolerancePct !== null &&
+                row?.minusTolerancePct !== undefined
+                ? `${row.minusTolerancePct}%`
                 : "-",
     },
 
     {
         key: "plusTolerancePct",
         label: "+ Tol. %",
-        render: (value) =>
-            value !== null &&
-            value !== undefined
-                ? `${value}%`
+        render: (row) =>
+            row?.plusTolerancePct !== null &&
+                row?.plusTolerancePct !== undefined
+                ? `${row.plusTolerancePct}%`
                 : "-",
     },
 
     {
         key: "managementShipmentTargetQty",
         label: "Shipment Target",
-        render: (value) =>
-            value !== null &&
-            value !== undefined
-                ? value
-                : "-",
+        render: (row) =>
+            row?.managementShipmentTargetQty ??
+            "-",
     },
 
     {
         key: "productionAllowanceQty",
         label: "Production Allowance",
-        render: (value) =>
-            value !== null &&
-            value !== undefined
-                ? value
-                : "-",
+        render: (row) =>
+            row?.productionAllowanceQty ??
+            "-",
     },
 
     {
         key: "bomProductionBasisQty",
         label: "BOM Basis Qty",
-        render: (value) =>
-            value !== null &&
-            value !== undefined
-                ? value
-                : "-",
+        render: (row) =>
+            row?.bomProductionBasisQty ??
+            "-",
     },
 
     {
         key: "isBulkProductionBlocked",
         label: "Bulk Production",
-        render: (value) =>
-            value
+        render: (row) =>
+            row?.isBulkProductionBlocked
                 ? "BLOCKED"
                 : "RELEASED",
     },
 
     {
-        key: "salesContract",
-        label: "Sales Contract",
-        render: (value, row) =>
-            row?.salesContract
-                ?.salesContractNumber ||
-            row?.salesContract?.id ||
-            "-",
-    },
-
-    {
         key: "createdAt",
         label: "Created At",
-        render: (value) =>
-            value
+        render: (row) =>
+            row?.createdAt
                 ? new Date(
-                      value
-                  ).toLocaleDateString()
+                    row.createdAt
+                ).toLocaleDateString()
                 : "-",
     },
 ];
 
 
 /* ============================================================
-   ACTIVATE SALES ORDER FIELDS
+   ACTIVATION FIELDS
+
+   Order Token:
+   - temporarily entered manually as UUID
+   - must exist in database
+   - must not already be linked to another Sales Order
+
+   Sales Contract:
+   - label shows salesContractNumber
+   - value submitted is the real Sales Contract UUID
+
+   ATX / ION:
+   - not shown
+   - backend generates it
+
+   Bulk Production:
+   - not shown
+   - always sent as BLOCKED
 ============================================================ */
 
-const activateFields = [
+const activationFields = [
     {
         name: "contractId",
-        label: "Sales Contract ID",
-        type: "text",
+        label: "Sales Contract",
+        type: "select",
         required: true,
-        placeholder: "Enter sales contract ID",
     },
 
     {
         name: "orderTokenId",
-        label: "Order Token ID",
+        label: "Order Token UUID",
         type: "text",
+        placeholder: "Paste Order Token UUID from database",
         required: true,
-        placeholder: "Enter order token ID",
-    },
-
-    {
-        name: "atxIonNumber",
-        label: "ATX / ION Number",
-        type: "text",
-        required: false,
-        placeholder: "Leave empty to auto-generate",
     },
 
     {
@@ -155,54 +164,41 @@ const activateFields = [
         label: "Contract Ordered Qty",
         type: "number",
         required: true,
-        placeholder: "Enter ordered quantity",
     },
 
     {
         name: "minusTolerancePct",
         label: "Minus Tolerance %",
         type: "number",
-        required: false,
-        placeholder: "Enter minus tolerance",
+        required: true,
     },
 
     {
         name: "plusTolerancePct",
         label: "Plus Tolerance %",
         type: "number",
-        required: false,
-        placeholder: "Enter plus tolerance",
+        required: true,
     },
 
     {
         name: "managementShipmentTargetQty",
         label: "Management Shipment Target Qty",
         type: "number",
-        required: false,
-        placeholder: "Enter shipment target",
+        required: true,
     },
 
     {
         name: "productionAllowanceQty",
         label: "Production Allowance Qty",
         type: "number",
-        required: false,
-        placeholder: "Enter production allowance",
+        required: true,
     },
 
     {
         name: "bomProductionBasisQty",
         label: "BOM Production Basis Qty",
         type: "number",
-        required: false,
-        placeholder: "Enter BOM production basis",
-    },
-
-    {
-        name: "isBulkProductionBlocked",
-        label: "Block Bulk Production",
-        type: "checkbox",
-        required: false,
+        required: true,
     },
 ];
 
@@ -265,6 +261,9 @@ const SalesOrdersDashboard = () => {
     const [salesOrders, setSalesOrders] =
         useState([]);
 
+    const [salesContracts, setSalesContracts] =
+        useState([]);
+
     const [selectedSalesOrder, setSelectedSalesOrder] =
         useState(null);
 
@@ -275,6 +274,9 @@ const SalesOrdersDashboard = () => {
         useState(false);
 
     const [saving, setSaving] =
+        useState(false);
+
+    const [contractsLoading, setContractsLoading] =
         useState(false);
 
     const [searchTerm, setSearchTerm] =
@@ -320,6 +322,7 @@ const SalesOrdersDashboard = () => {
             );
 
             toast.error(
+                error?.response?.data?.message ||
                 "Failed to load sales orders."
             );
 
@@ -330,7 +333,118 @@ const SalesOrdersDashboard = () => {
             setLoading(false);
 
         }
+    };
 
+
+    /* ========================================================
+       LOAD SALES CONTRACTS
+
+       Existing endpoints only:
+
+       1. getAllPOs()
+       2. getSalesContractsByPo(poId)
+
+       No new endpoints are required.
+    ======================================================== */
+
+    const loadSalesContracts = async () => {
+
+        try {
+
+            setContractsLoading(true);
+
+            const poResponse =
+                await getAllPOs();
+
+            const pos =
+                poResponse?.data || [];
+
+            if (!pos.length) {
+
+                setSalesContracts([]);
+
+                return;
+            }
+
+            const contractResponses =
+                await Promise.all(
+                    pos
+                        .filter((po) => po?.id)
+                        .map(async (po) => {
+
+                            try {
+
+                                const response =
+                                    await getSalesContractsByPo(
+                                        po.id
+                                    );
+
+                                return (
+                                    response?.data || []
+                                ).map((contract) => ({
+
+                                    ...contract,
+
+                                    poId: po.id,
+
+                                    customerPoNumber:
+                                        po.customerPoNumber,
+
+                                }));
+
+                            } catch (error) {
+
+                                console.error(
+                                    `Failed to load sales contracts for PO ${po.id}:`,
+                                    error
+                                );
+
+                                return [];
+                            }
+                        })
+                );
+
+            const allContracts =
+                contractResponses.flat();
+
+            /*
+             * Remove duplicate contracts
+             * using Sales Contract UUID.
+             */
+            const uniqueContracts =
+                Array.from(
+                    new Map(
+                        allContracts.map(
+                            (contract) => [
+                                contract.id,
+                                contract,
+                            ]
+                        )
+                    ).values()
+                );
+
+            setSalesContracts(
+                uniqueContracts
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load sales contracts:",
+                error
+            );
+
+            toast.error(
+                "Failed to load sales contracts."
+            );
+
+            setSalesContracts([]);
+
+        } finally {
+
+            setContractsLoading(false);
+
+        }
     };
 
 
@@ -341,72 +455,168 @@ const SalesOrdersDashboard = () => {
     useEffect(() => {
 
         loadSalesOrders();
+        loadSalesContracts();
 
     }, []);
+
+
+    /* ========================================================
+       SALES CONTRACT OPTIONS
+
+       Display:
+       SC number + PO number
+
+       Submit:
+       Sales Contract UUID
+    ======================================================== */
+
+    const salesContractOptions =
+        useMemo(() => {
+
+            return salesContracts
+                .filter(
+                    (contract) =>
+                        contract?.id &&
+                        contract?.salesContractNumber
+                )
+                .map((contract) => ({
+
+                    value: contract.id,
+
+                    label:
+                        `${contract.salesContractNumber}` +
+                        (
+                            contract.customerPoNumber
+                                ? ` - PO ${contract.customerPoNumber}`
+                                : ""
+                        ),
+
+                }));
+
+        }, [salesContracts]);
+
+
+    /* ========================================================
+       CURRENT FORM FIELDS
+
+       Add mode:
+       - Sales Contract
+       - Order Token UUID
+       - quantities
+
+       Edit mode:
+       - quantities only
+    ======================================================== */
+
+    const currentFields =
+        useMemo(() => {
+
+            if (formMode === "edit") {
+
+                return quantityFields;
+            }
+
+            return activationFields.map(
+                (field) => {
+
+                    if (
+                        field.name === "contractId"
+                    ) {
+
+                        return {
+                            ...field,
+                            options:
+                                salesContractOptions,
+                        };
+                    }
+
+                    return field;
+                }
+            );
+
+        }, [
+            formMode,
+            salesContractOptions,
+        ]);
 
 
     /* ========================================================
        SEARCH
     ======================================================== */
 
-    const filteredData = useMemo(() => {
+    const filteredData =
+        useMemo(() => {
 
-        if (!searchTerm.trim()) {
-            return salesOrders;
-        }
+            if (!searchTerm.trim()) {
 
-        const keyword =
-            searchTerm
-                .toLowerCase()
-                .trim();
-
-        return salesOrders.filter(
-            (order) => {
-
-                const contractNumber =
-                    order?.salesContract
-                        ?.salesContractNumber ||
-                    "";
-
-                const orderToken =
-                    order?.orderToken?.id ||
-                    order?.orderTokenId ||
-                    "";
-
-                const searchableValues = [
-                    order?.atxIonNumber,
-                    order?.contractId,
-                    order?.orderTokenId,
-                    contractNumber,
-                    order?.contractOrderedQty,
-                    order?.isBulkProductionBlocked
-                        ? "blocked"
-                        : "released",
-                ];
-
-                return searchableValues.some(
-                    (value) =>
-                        String(
-                            value ?? ""
-                        )
-                            .toLowerCase()
-                            .includes(keyword)
-                );
-
+                return salesOrders;
             }
-        );
 
-    }, [
-        salesOrders,
-        searchTerm,
-    ]);
+            const keyword =
+                searchTerm
+                    .toLowerCase()
+                    .trim();
+
+            return salesOrders.filter(
+                (order) => {
+
+                    const contractNumber =
+                        order
+                            ?.salesContract
+                            ?.salesContractNumber ||
+                        "";
+
+                    const searchableValues = [
+
+                        order?.atxIonNumber,
+
+                        order?.contractId,
+
+                        contractNumber,
+
+                        order?.contractOrderedQty,
+
+                        order?.managementShipmentTargetQty,
+
+                        order?.productionAllowanceQty,
+
+                        order?.bomProductionBasisQty,
+
+                        order?.isBulkProductionBlocked
+                            ? "blocked"
+                            : "released",
+
+                    ];
+
+                    return searchableValues.some(
+                        (value) =>
+                            String(value ?? "")
+                                .toLowerCase()
+                                .includes(keyword)
+                    );
+                }
+            );
+
+        }, [
+            salesOrders,
+            searchTerm,
+        ]);
 
 
     /* ========================================================
-       ACTIVATE SALES ORDER
+       OPEN ACTIVATION MODAL
     ======================================================== */
 
     const openActivateModal = () => {
+
+        if (!salesContracts.length) {
+
+            toast.warning(
+                "No sales contracts are available."
+            );
+
+            return;
+        }
 
         setSelectedItem(null);
 
@@ -415,7 +625,6 @@ const SalesOrdersDashboard = () => {
         setFormMode("add");
 
         setShowFormModal(true);
-
     };
 
 
@@ -435,7 +644,8 @@ const SalesOrdersDashboard = () => {
                 );
 
             const data =
-                response?.data || item;
+                response?.data ||
+                item;
 
             setSelectedSalesOrder(data);
 
@@ -449,6 +659,7 @@ const SalesOrdersDashboard = () => {
             );
 
             toast.error(
+                error?.response?.data?.message ||
                 "Failed to load sales order."
             );
 
@@ -457,7 +668,6 @@ const SalesOrdersDashboard = () => {
             setLoading(false);
 
         }
-
     };
 
 
@@ -474,7 +684,6 @@ const SalesOrdersDashboard = () => {
         setFormMode("edit");
 
         setShowFormModal(true);
-
     };
 
 
@@ -489,93 +698,74 @@ const SalesOrdersDashboard = () => {
             setSaving(true);
 
 
-            /* ================================================
-               ACTIVATE
-            ================================================ */
+            /* ==================================================
+               ACTIVATE SALES ORDER
+            ================================================== */
 
             if (formMode === "add") {
 
+                /*
+                 * Sales Contract:
+                 * formData.contractId is the real
+                 * SalesContractPayment UUID.
+                 *
+                 * Order Token:
+                 * formData.orderTokenId is temporarily
+                 * entered manually as an existing
+                 * OrderToken UUID.
+                 */
+
                 const payload = {
+
                     contractId:
                         formData.contractId,
 
                     orderTokenId:
                         formData.orderTokenId,
 
-                    ...(formData.atxIonNumber
-                        ? {
-                            atxIonNumber:
-                                formData.atxIonNumber,
-                        }
-                        : {}),
-
                     contractOrderedQty:
                         Number(
                             formData.contractOrderedQty
                         ),
 
-                    ...(formData.minusTolerancePct !==
-                    undefined &&
-                    formData.minusTolerancePct !== ""
-                        ? {
-                            minusTolerancePct:
-                                Number(
-                                    formData.minusTolerancePct
-                                ),
-                        }
-                        : {}),
+                    minusTolerancePct:
+                        Number(
+                            formData.minusTolerancePct
+                        ),
 
-                    ...(formData.plusTolerancePct !==
-                    undefined &&
-                    formData.plusTolerancePct !== ""
-                        ? {
-                            plusTolerancePct:
-                                Number(
-                                    formData.plusTolerancePct
-                                ),
-                        }
-                        : {}),
+                    plusTolerancePct:
+                        Number(
+                            formData.plusTolerancePct
+                        ),
 
-                    ...(formData.managementShipmentTargetQty !==
-                    undefined &&
-                    formData.managementShipmentTargetQty !==
-                    ""
-                        ? {
-                            managementShipmentTargetQty:
-                                Number(
-                                    formData.managementShipmentTargetQty
-                                ),
-                        }
-                        : {}),
+                    managementShipmentTargetQty:
+                        Number(
+                            formData.managementShipmentTargetQty
+                        ),
 
-                    ...(formData.productionAllowanceQty !==
-                    undefined &&
-                    formData.productionAllowanceQty !==
-                    ""
-                        ? {
-                            productionAllowanceQty:
-                                Number(
-                                    formData.productionAllowanceQty
-                                ),
-                        }
-                        : {}),
+                    productionAllowanceQty:
+                        Number(
+                            formData.productionAllowanceQty
+                        ),
 
-                    ...(formData.bomProductionBasisQty !==
-                    undefined &&
-                    formData.bomProductionBasisQty !==
-                    ""
-                        ? {
-                            bomProductionBasisQty:
-                                Number(
-                                    formData.bomProductionBasisQty
-                                ),
-                        }
-                        : {}),
+                    bomProductionBasisQty:
+                        Number(
+                            formData.bomProductionBasisQty
+                        ),
 
+                    /*
+                     * Bulk production must remain
+                     * blocked during activation.
+                     */
                     isBulkProductionBlocked:
-                        formData.isBulkProductionBlocked ??
                         true,
                 };
+
+
+                console.log(
+                    "ACTIVATE SALES ORDER PAYLOAD:",
+                    payload
+                );
 
 
                 await activateSalesOrder(
@@ -584,17 +774,28 @@ const SalesOrdersDashboard = () => {
 
 
                 toast.success(
-                    "Sales order activated successfully."
+                    "Sales Order activated successfully."
                 );
 
+
+                await loadSalesOrders();
+
+
+                setShowFormModal(false);
+
+                setSelectedItem(null);
+
+                setSelectedSalesOrder(null);
+
+                return;
             }
 
 
-            /* ================================================
+            /* ==================================================
                EDIT QUANTITIES
-            ================================================ */
+            ================================================== */
 
-            else if (formMode === "edit") {
+            if (formMode === "edit") {
 
                 const orderId =
                     selectedSalesOrder?.id;
@@ -606,7 +807,6 @@ const SalesOrdersDashboard = () => {
                     );
 
                     return;
-
                 }
 
 
@@ -618,6 +818,7 @@ const SalesOrdersDashboard = () => {
                     undefined &&
                     formData.contractOrderedQty !== ""
                 ) {
+
                     payload.contractOrderedQty =
                         Number(
                             formData.contractOrderedQty
@@ -630,6 +831,7 @@ const SalesOrdersDashboard = () => {
                     undefined &&
                     formData.minusTolerancePct !== ""
                 ) {
+
                     payload.minusTolerancePct =
                         Number(
                             formData.minusTolerancePct
@@ -642,6 +844,7 @@ const SalesOrdersDashboard = () => {
                     undefined &&
                     formData.plusTolerancePct !== ""
                 ) {
+
                     payload.plusTolerancePct =
                         Number(
                             formData.plusTolerancePct
@@ -652,9 +855,9 @@ const SalesOrdersDashboard = () => {
                 if (
                     formData.managementShipmentTargetQty !==
                     undefined &&
-                    formData.managementShipmentTargetQty !==
-                    ""
+                    formData.managementShipmentTargetQty !== ""
                 ) {
+
                     payload.managementShipmentTargetQty =
                         Number(
                             formData.managementShipmentTargetQty
@@ -665,9 +868,9 @@ const SalesOrdersDashboard = () => {
                 if (
                     formData.productionAllowanceQty !==
                     undefined &&
-                    formData.productionAllowanceQty !==
-                    ""
+                    formData.productionAllowanceQty !== ""
                 ) {
+
                     payload.productionAllowanceQty =
                         Number(
                             formData.productionAllowanceQty
@@ -678,9 +881,9 @@ const SalesOrdersDashboard = () => {
                 if (
                     formData.bomProductionBasisQty !==
                     undefined &&
-                    formData.bomProductionBasisQty !==
-                    ""
+                    formData.bomProductionBasisQty !== ""
                 ) {
+
                     payload.bomProductionBasisQty =
                         Number(
                             formData.bomProductionBasisQty
@@ -697,7 +900,6 @@ const SalesOrdersDashboard = () => {
                 toast.success(
                     "Sales order quantities updated successfully."
                 );
-
             }
 
 
@@ -726,24 +928,28 @@ const SalesOrdersDashboard = () => {
         } finally {
 
             setSaving(false);
-
         }
-
     };
 
 
     /* ========================================================
-       CLOSE MODAL
+       CLOSE FORM MODAL
     ======================================================== */
 
     const closeModal = () => {
+
+        if (saving) {
+
+            return;
+        }
 
         setShowFormModal(false);
 
         setSelectedItem(null);
 
-        setFormMode("add");
+        setSelectedSalesOrder(null);
 
+        setFormMode("add");
     };
 
 
@@ -756,24 +962,7 @@ const SalesOrdersDashboard = () => {
         setShowDetails(false);
 
         setSelectedSalesOrder(null);
-
     };
-
-
-    /* ========================================================
-       CURRENT FORM
-    ======================================================== */
-
-    const currentFields =
-        formMode === "edit"
-            ? quantityFields
-            : activateFields;
-
-
-    const currentTitle =
-        formMode === "edit"
-            ? "Edit Sales Order Quantities"
-            : "Activate Sales Order";
 
 
     /* ========================================================
@@ -781,7 +970,6 @@ const SalesOrdersDashboard = () => {
     ======================================================== */
 
     return (
-
         <div className="dashboard-container">
 
             {/* ==================================================
@@ -810,7 +998,10 @@ const SalesOrdersDashboard = () => {
                     onClick={
                         openActivateModal
                     }
-                    disabled={loading}
+                    disabled={
+                        loading ||
+                        contractsLoading
+                    }
                 >
                     Activate Sales Order
                 </button>
@@ -822,13 +1013,9 @@ const SalesOrdersDashboard = () => {
                SEARCH
             ================================================== */}
 
-            <div
-                className="selection-bar"
-            >
+            <div className="selection-bar">
 
-                <div
-                    className="selection-group"
-                >
+                <div className="selection-group">
 
                     <label>
                         Search Sales Orders
@@ -842,7 +1029,7 @@ const SalesOrdersDashboard = () => {
                                 e.target.value
                             )
                         }
-                        placeholder="Search ATX/ION, contract, order token..."
+                        placeholder="Search ATX/ION, sales contract, quantity..."
                     />
 
                 </div>
@@ -851,15 +1038,24 @@ const SalesOrdersDashboard = () => {
 
 
             {/* ==================================================
-               LOADING
+               CONTRACT LOADING
+            ================================================== */}
+
+            {contractsLoading && (
+                <div className="loading-state">
+                    Loading sales contracts...
+                </div>
+            )}
+
+
+            {/* ==================================================
+               SALES ORDER LOADING
             ================================================== */}
 
             {loading && (
-
                 <div className="loading-state">
                     Loading sales orders...
                 </div>
-
             )}
 
 
@@ -867,24 +1063,24 @@ const SalesOrdersDashboard = () => {
                TABLE
             ================================================== */}
 
-            {!loading && filteredData.length > 0 && (
+            {!loading &&
+                filteredData.length > 0 && (
 
-                <CrudTable
-                    columns={
-                        salesOrderColumns
-                    }
-                    data={
-                        filteredData
-                    }
-                    onView={
-                        handleView
-                    }
-                    onEdit={
-                        handleEdit
-                    }
-                />
-
-            )}
+                    <CrudTable
+                        columns={
+                            salesOrderColumns
+                        }
+                        data={
+                            filteredData
+                        }
+                        onView={
+                            handleView
+                        }
+                        onEdit={
+                            handleEdit
+                        }
+                    />
+                )}
 
 
             {/* ==================================================
@@ -905,17 +1101,19 @@ const SalesOrdersDashboard = () => {
                             activated sales orders.
                         </p>
 
-                        <button
-                            className="primary-btn"
-                            onClick={
-                                openActivateModal
-                            }
-                        >
-                            Activate First Sales Order
-                        </button>
+                        {salesContracts.length > 0 && (
+
+                            <button
+                                className="primary-btn"
+                                onClick={
+                                    openActivateModal
+                                }
+                            >
+                                Activate First Sales Order
+                            </button>
+                        )}
 
                     </div>
-
                 )}
 
 
@@ -924,30 +1122,38 @@ const SalesOrdersDashboard = () => {
             ================================================== */}
 
             <CrudFormModal
+
                 title={
-                    currentTitle
+                    formMode === "edit"
+                        ? "Sales Order Quantities"
+                        : "Sales Order"
                 }
+
                 fields={
                     currentFields
                 }
+
                 isOpen={
                     showFormModal
                 }
+
                 mode={
-                    formMode === "add"
-                        ? "add"
-                        : "edit"
+                    formMode
                 }
+
                 initialData={
                     selectedItem ||
                     selectedSalesOrder
                 }
+
                 loading={
                     saving
                 }
+
                 onClose={
                     closeModal
                 }
+
                 onSubmit={
                     handleSubmit
                 }
@@ -975,9 +1181,7 @@ const SalesOrdersDashboard = () => {
                             }
                         >
 
-                            <div
-                                className="dashboard-header"
-                            >
+                            <div className="dashboard-header">
 
                                 <div>
 
@@ -987,11 +1191,14 @@ const SalesOrdersDashboard = () => {
 
                                     <p>
                                         {
-                                            selectedSalesOrder.atxIonNumber
+                                            selectedSalesOrder
+                                                .atxIonNumber ||
+                                            "-"
                                         }
                                     </p>
 
                                 </div>
+
 
                                 <button
                                     className="secondary-btn"
@@ -1008,20 +1215,24 @@ const SalesOrdersDashboard = () => {
                             <div className="details-grid">
 
                                 <div>
+
                                     <strong>
                                         ATX / ION
                                     </strong>
 
                                     <p>
                                         {
-                                            selectedSalesOrder.atxIonNumber ||
+                                            selectedSalesOrder
+                                                .atxIonNumber ||
                                             "-"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
                                     <strong>
                                         Sales Contract
                                     </strong>
@@ -1031,84 +1242,117 @@ const SalesOrdersDashboard = () => {
                                             selectedSalesOrder
                                                 ?.salesContract
                                                 ?.salesContractNumber ||
-                                            selectedSalesOrder.contractId ||
                                             "-"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
-                                    <strong>
-                                        Order Token
-                                    </strong>
 
-                                    <p>
-                                        {
-                                            selectedSalesOrder.orderTokenId ||
-                                            "-"
-                                        }
-                                    </p>
-                                </div>
-
-
-                                <div>
                                     <strong>
                                         Contract Ordered Qty
                                     </strong>
 
                                     <p>
                                         {
-                                            selectedSalesOrder.contractOrderedQty ??
+                                            selectedSalesOrder
+                                                .contractOrderedQty ??
                                             "-"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
+                                    <strong>
+                                        Minus Tolerance
+                                    </strong>
+
+                                    <p>
+                                        {
+                                            selectedSalesOrder
+                                                .minusTolerancePct ??
+                                            "-"
+                                        }
+                                    </p>
+
+                                </div>
+
+
+                                <div>
+
+                                    <strong>
+                                        Plus Tolerance
+                                    </strong>
+
+                                    <p>
+                                        {
+                                            selectedSalesOrder
+                                                .plusTolerancePct ??
+                                            "-"
+                                        }
+                                    </p>
+
+                                </div>
+
+
+                                <div>
+
                                     <strong>
                                         Management Shipment Target
                                     </strong>
 
                                     <p>
                                         {
-                                            selectedSalesOrder.managementShipmentTargetQty ??
+                                            selectedSalesOrder
+                                                .managementShipmentTargetQty ??
                                             "-"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
                                     <strong>
                                         Production Allowance
                                     </strong>
 
                                     <p>
                                         {
-                                            selectedSalesOrder.productionAllowanceQty ??
+                                            selectedSalesOrder
+                                                .productionAllowanceQty ??
                                             "-"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
                                     <strong>
                                         BOM Production Basis
                                     </strong>
 
                                     <p>
                                         {
-                                            selectedSalesOrder.bomProductionBasisQty ??
+                                            selectedSalesOrder
+                                                .bomProductionBasisQty ??
                                             "-"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
                                     <strong>
                                         Bulk Production
                                     </strong>
@@ -1117,14 +1361,16 @@ const SalesOrdersDashboard = () => {
                                         {
                                             selectedSalesOrder
                                                 .isBulkProductionBlocked
-                                            ? "BLOCKED"
-                                            : "RELEASED"
+                                                ? "BLOCKED"
+                                                : "RELEASED"
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
                                     <strong>
                                         BOM Count
                                     </strong>
@@ -1137,10 +1383,12 @@ const SalesOrdersDashboard = () => {
                                             0
                                         }
                                     </p>
+
                                 </div>
 
 
                                 <div>
+
                                     <strong>
                                         Gate Control
                                     </strong>
@@ -1154,6 +1402,7 @@ const SalesOrdersDashboard = () => {
                                                 : "Not Created"
                                         }
                                     </p>
+
                                 </div>
 
                             </div>
@@ -1161,13 +1410,10 @@ const SalesOrdersDashboard = () => {
                         </div>
 
                     </div>
-
                 )}
 
         </div>
-
     );
-
 };
 
 

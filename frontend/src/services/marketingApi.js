@@ -388,24 +388,6 @@ export const getAllPOs = async () => {
                 originalPoAttachment: "PO-127",
                 createdAt: new Date().toISOString(),
             },
-            {
-                id: "dummy-po-002",
-                inquiryId: "dummy-inquiry-002",
-                customerPoNumber: "PO-2026-002",
-                poRevision: 1,
-                status: "PO_RECEIVED_VERIFICATION_PENDING",
-                originalPoAttachment: null,
-                createdAt: new Date().toISOString(),
-            },
-            {
-                id: "dummy-po-003",
-                inquiryId: "dummy-inquiry-003",
-                customerPoNumber: "PO-2026-003",
-                poRevision: 2,
-                status: "VERIFIED",
-                originalPoAttachment: null,
-                createdAt: new Date().toISOString(),
-            },
         ],
     };
 };
