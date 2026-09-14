@@ -1,0 +1,218 @@
+/* ============================================================
+   SALES ORDER DETAILS MODAL
+============================================================ */
+
+.sales-order-details-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+.sales-order-details-modal {
+    width: min(900px, 100%);
+    max-height: calc(100vh - 48px);
+
+    overflow-y: auto;
+
+    padding: 24px;
+
+    background: #ffffff;
+    color: #172033;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.25),
+        0 8px 20px rgba(15, 23, 42, 0.12);
+
+    box-sizing: border-box;
+
+    opacity: 1;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.sales-order-details-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+.sales-order-details-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.sales-order-details-header p {
+    margin: 6px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   CLOSE BUTTON
+============================================================ */
+
+.sales-order-details-close-btn {
+    border: none;
+    border-radius: 8px;
+
+    padding: 9px 15px;
+
+    background: #eef2f7;
+    color: #172033;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+.sales-order-details-close-btn:hover {
+    background: #e2e8f0;
+}
+
+
+/* ============================================================
+   DETAILS GRID
+============================================================ */
+
+.sales-order-details-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   DETAIL ITEM
+============================================================ */
+
+.sales-order-detail-item {
+    min-width: 0;
+
+    padding: 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+}
+
+.sales-order-detail-item strong {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.sales-order-detail-item p {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   STATUS
+============================================================ */
+
+.sales-order-status-blocked {
+    color: #b91c1c !important;
+}
+
+.sales-order-status-released {
+    color: #15803d !important;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 800px) {
+
+    .sales-order-details-overlay {
+        padding: 12px;
+    }
+
+    .sales-order-details-modal {
+        max-height: calc(100vh - 24px);
+
+        padding: 18px;
+    }
+
+    .sales-order-details-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 550px) {
+
+    .sales-order-details-header {
+        flex-direction: column;
+    }
+
+    .sales-order-details-grid {
+        grid-template-columns:
+            1fr;
+    }
+}

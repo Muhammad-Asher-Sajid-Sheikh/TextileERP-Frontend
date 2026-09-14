@@ -7,20 +7,26 @@ const CrudRow = ({
     onView,
     onEdit,
     onDelete,
+    onBom,
 }) => {
 
     const renderValue = (value) => {
-        // Empty values
-        if (value === null || value === undefined || value === "") {
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
             return "-";
         }
 
-        // Boolean
         if (typeof value === "boolean") {
             return (
                 <span
                     className={`status-badge ${
-                        value ? "status-yes" : "status-no"
+                        value
+                            ? "status-yes"
+                            : "status-no"
                     }`}
                 >
                     {value ? "Yes" : "No"}
@@ -28,29 +34,26 @@ const CrudRow = ({
             );
         }
 
-        // Arrays
         if (Array.isArray(value)) {
-            if (value.length === 0) {
-                return "-";
-            }
-
-            return `${value.length} item${value.length !== 1 ? "s" : ""}`;
+            return value.length
+                ? `${value.length} item${
+                      value.length !== 1
+                          ? "s"
+                          : ""
+                  }`
+                : "-";
         }
 
-        // Objects
         if (typeof value === "object") {
 
-            // Sales Contract
             if (value.salesContractNumber) {
                 return value.salesContractNumber;
             }
 
-            // Order Token
             if (value.orderNumber) {
                 return value.orderNumber;
             }
 
-            // Common name fields
             if (value.name) {
                 return value.name;
             }
@@ -63,7 +66,6 @@ const CrudRow = ({
                 return value.code;
             }
 
-            // Fallback
             if (value.id) {
                 return value.id;
             }
@@ -71,7 +73,6 @@ const CrudRow = ({
             return "-";
         }
 
-        // Numbers / strings
         return String(value);
     };
 
@@ -80,14 +81,10 @@ const CrudRow = ({
 
             {columns.map((column) => {
 
-                let value;
-
-                // Custom column renderer
-                if (typeof column.render === "function") {
-                    value = column.render(item);
-                } else {
-                    value = item?.[column.key];
-                }
+                const value =
+                    typeof column.render === "function"
+                        ? column.render(item)
+                        : item?.[column.key];
 
                 return (
                     <td key={column.key}>
@@ -99,32 +96,49 @@ const CrudRow = ({
 
             <td className="actions-cell">
 
-                <button
-                    type="button"
-                    className="action-btn view-btn"
-                    onClick={() => onView?.(item)}
-                    title="View"
-                >
-                    View
-                </button>
+                {onBom && (
+                    <button
+                        type="button"
+                        className="action-btn bom-btn"
+                        onClick={() => onBom(item)}
+                        title="Manage BOM"
+                    >
+                        BOM
+                    </button>
+                )}
 
-                <button
-                    type="button"
-                    className="action-btn edit-btn"
-                    onClick={() => onEdit?.(item)}
-                    title="Edit"
-                >
-                    Edit
-                </button>
+                {onView && (
+                    <button
+                        type="button"
+                        className="action-btn view-btn"
+                        onClick={() => onView(item)}
+                        title="View"
+                    >
+                        View
+                    </button>
+                )}
 
-                <button
-                    type="button"
-                    className="action-btn delete-btn"
-                    onClick={() => onDelete?.(item)}
-                    title="Delete"
-                >
-                    Delete
-                </button>
+                {onEdit && (
+                    <button
+                        type="button"
+                        className="action-btn edit-btn"
+                        onClick={() => onEdit(item)}
+                        title="Edit"
+                    >
+                        Edit
+                    </button>
+                )}
+
+                {onDelete && (
+                    <button
+                        type="button"
+                        className="action-btn delete-btn"
+                        onClick={() => onDelete(item)}
+                        title="Delete"
+                    >
+                        Delete
+                    </button>
+                )}
 
             </td>
 

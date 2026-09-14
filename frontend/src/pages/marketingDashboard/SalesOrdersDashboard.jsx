@@ -13,12 +13,16 @@ import {
     updateSalesOrderQuantities,
     getAllPOs,
     getSalesContractsByPo,
+    getBomsByOrderId,
 } from "../../services/marketingApi";
 
 import CrudTable from "../../components/common/marketing/CrudTable";
 import CrudFormModal from "../../components/common/marketing/CrudFormModal";
+import BomManagementModal
+    from "../../components/common/marketing/BomManagementModal";
 
 import "../../styles/marketing/partyService/dashboard.css";
+import "../../styles/marketing/salesOrder/salesOrderDetailsModal.css";
 
 
 /* ============================================================
@@ -266,6 +270,18 @@ const SalesOrdersDashboard = () => {
 
     const [selectedSalesOrder, setSelectedSalesOrder] =
         useState(null);
+
+    const [selectedBomOrder, setSelectedBomOrder] =
+        useState(null);
+
+    // const [bomList, setBomList] =
+    //     useState([]);
+
+    const [showBomManagement, setShowBomManagement] =
+        useState(false);
+
+    // const [bomLoading, setBomLoading] =
+    //     useState(false);
 
     const [selectedItem, setSelectedItem] =
         useState(null);
@@ -686,6 +702,29 @@ const SalesOrdersDashboard = () => {
         setShowFormModal(true);
     };
 
+    /* ========================================================
+   BOM MANAGEMENT
+======================================================== */
+
+    const handleBom = (item) => {
+
+        if (!item?.id) {
+            toast.error(
+                "Sales order ID is missing."
+            );
+            return;
+        }
+
+        console.log(
+            "OPEN BOM MANAGEMENT:",
+            item
+        );
+
+        setSelectedBomOrder(item);
+
+        setShowBomManagement(true);
+    };
+
 
     /* ========================================================
        SUBMIT
@@ -976,7 +1015,7 @@ const SalesOrdersDashboard = () => {
                HEADER
             ================================================== */}
 
-            <div className="dashboard-header">
+            <div className="sales-order-details-header">
 
                 <div>
 
@@ -1079,6 +1118,9 @@ const SalesOrdersDashboard = () => {
                         onEdit={
                             handleEdit
                         }
+                        onBom={
+                            handleBom
+                        }
                     />
                 )}
 
@@ -1168,20 +1210,18 @@ const SalesOrdersDashboard = () => {
                 selectedSalesOrder && (
 
                     <div
-                        className="modal-overlay"
-                        onClick={
-                            closeDetails
-                        }
+                        className="sales-order-details-overlay"
+                        onClick={closeDetails}
                     >
 
                         <div
-                            className="modal-content"
+                            className="sales-order-details-modal"
                             onClick={(e) =>
                                 e.stopPropagation()
                             }
                         >
 
-                            <div className="dashboard-header">
+                            <div className="sales-order-details-header">
 
                                 <div>
 
@@ -1201,7 +1241,7 @@ const SalesOrdersDashboard = () => {
 
 
                                 <button
-                                    className="secondary-btn"
+                                    className="sales-order-details-close-btn"
                                     onClick={
                                         closeDetails
                                     }
@@ -1212,9 +1252,9 @@ const SalesOrdersDashboard = () => {
                             </div>
 
 
-                            <div className="details-grid">
+                            <div className="sales-order-details-grid">
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         ATX / ION
@@ -1231,7 +1271,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Sales Contract
@@ -1249,7 +1289,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Contract Ordered Qty
@@ -1266,7 +1306,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Minus Tolerance
@@ -1283,7 +1323,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Plus Tolerance
@@ -1300,7 +1340,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item"> 
 
                                     <strong>
                                         Management Shipment Target
@@ -1317,7 +1357,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Production Allowance
@@ -1334,7 +1374,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         BOM Production Basis
@@ -1351,25 +1391,28 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Bulk Production
                                     </strong>
 
-                                    <p>
-                                        {
-                                            selectedSalesOrder
-                                                .isBulkProductionBlocked
-                                                ? "BLOCKED"
-                                                : "RELEASED"
+                                    <p
+                                        className={
+                                            selectedSalesOrder.isBulkProductionBlocked
+                                                ? "sales-order-status-blocked"
+                                                : "sales-order-status-released"
                                         }
+                                    >
+                                        {selectedSalesOrder.isBulkProductionBlocked
+                                            ? "BLOCKED"
+                                            : "RELEASED"}
                                     </p>
 
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         BOM Count
@@ -1387,7 +1430,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div>
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Gate Control
@@ -1412,6 +1455,18 @@ const SalesOrdersDashboard = () => {
                     </div>
                 )}
 
+            <BomManagementModal
+                isOpen={
+                    showBomManagement
+                }
+                salesOrder={
+                    selectedBomOrder
+                }
+                onClose={() => {
+                    setShowBomManagement(false);
+                    setSelectedBomOrder(null);
+                }}
+            />
         </div>
     );
 };
