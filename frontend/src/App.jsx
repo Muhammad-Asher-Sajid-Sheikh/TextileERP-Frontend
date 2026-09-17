@@ -16,6 +16,7 @@ import BaselineServiceDashboard from './pages/marketingDashboard/BaselineService
 import CostSheetDashboard from './pages/marketingDashboard/CostSheetDashboard.jsx';
 import SamplesDashboard from './pages/marketingDashboard/SamplesDashboard.jsx';
 import SalesServicesDashboard from './pages/marketingDashboard/SalesContractServiceDashboard.jsx';
+import SalesOrdersDashboard from "./pages/marketingDashboard/SalesOrdersDashboard.jsx";
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -86,8 +87,12 @@ function App() {
           <Route path="/marketing/cost-sheet" element={<CostSheetDashboard />} />
           <Route path="/marketing/samples" element={<SamplesDashboard />} />
           <Route path="/marketing/sales" element={<SalesServicesDashboard />} />
+          <Route
+            path="/marketing/sales-orders"
+            element={<SalesOrdersDashboard />}
+          />
 
-          
+
           <Route path="production/assembly" element={<AssemblyDashboard />} />
           <Route path="production/surface-decorations" element={<SurfaceDecorationsDashboard />} />
           <Route path="/production/scratch" element={<ProductionDashboard />} />
@@ -97,31 +102,31 @@ function App() {
 
           <Route path="/merchandise" element={<MerchandiseDashboard />} />
           {/* Public Routes */}
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
               <PublicRoute>
                 <LoginPage />
               </PublicRoute>
-            } 
+            }
           />
-          <Route 
-            path="/register" 
+          <Route
+            path="/register"
             element={
               <PublicRoute>
                 <RegisterPage />
               </PublicRoute>
-            } 
+            }
           />
 
           {/* Protected Routes */}
-          <Route 
-            path="/dashboard" 
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <DashboardPage />
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* Default Redirections */}

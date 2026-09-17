@@ -388,24 +388,6 @@ export const getAllPOs = async () => {
                 originalPoAttachment: "PO-127",
                 createdAt: new Date().toISOString(),
             },
-            {
-                id: "dummy-po-002",
-                inquiryId: "dummy-inquiry-002",
-                customerPoNumber: "PO-2026-002",
-                poRevision: 1,
-                status: "PO_RECEIVED_VERIFICATION_PENDING",
-                originalPoAttachment: null,
-                createdAt: new Date().toISOString(),
-            },
-            {
-                id: "dummy-po-003",
-                inquiryId: "dummy-inquiry-003",
-                customerPoNumber: "PO-2026-003",
-                poRevision: 2,
-                status: "VERIFIED",
-                originalPoAttachment: null,
-                createdAt: new Date().toISOString(),
-            },
         ],
     };
 };
@@ -468,10 +450,139 @@ export const updateSalesContractSignedCopy = async (
     return response.data;
 };
 
+
+// ==========================================
+// SALES ORDERS
+// ==========================================
+
+export const getAllSalesOrders = async () => {
+    const response = await api.get("/api/marketing/sales-orders");
+    return response.data;
+};
+
+export const activateSalesOrder = async (data) => {
+    const response = await api.post(
+        "/api/marketing/sales-orders/activate",
+        data
+    );
+
+    return response.data;
+};
+
+export const getSalesOrderById = async (id) => {
+    const response = await api.get(
+        `/api/marketing/sales-orders/${id}`
+    );
+
+    return response.data;
+};
+
+export const updateSalesOrderQuantities = async (id, data) => {
+    const response = await api.patch(
+        `/api/marketing/sales-orders/${id}/quantities`,
+        data
+    );
+
+    return response.data;
+};
+
+
+// ==========================================
+// SALES ORDER BOM
+// ==========================================
+
+export const getBomsByOrderId = async (orderId) => {
+    const response = await api.get(
+        `/api/marketing/sales-orders/${orderId}/boms`
+    );
+
+    return response.data;
+};
+
+export const createOrderBom = async (orderId, data) => {
+    const response = await api.post(
+        `/api/marketing/sales-orders/${orderId}/boms`,
+        data
+    );
+
+    return response.data;
+};
+
+export const getOrderBomById = async (bomId) => {
+    const response = await api.get(
+        `/api/marketing/order-boms/${bomId}`
+    );
+
+    return response.data;
+};
+
+export const addYarnDetailToBom = async (bomId, data) => {
+    const response = await api.post(
+        `/api/marketing/order-boms/${bomId}/yarn-details`,
+        data
+    );
+
+    return response.data;
+};
+
+export const updateYarnDetail = async (yarnDetailId, data) => {
+    const response = await api.patch(
+        `/api/marketing/order-boms/yarn-details/${yarnDetailId}`,
+        data
+    );
+
+    return response.data;
+};
+
+
+// ============================================================
+// PRODUCTION GATE CONTROL
+// ============================================================
+
+export const getGateControlsByOrderId = async (orderId) => {
+    const response = await api.get(
+        `/api/marketing/sales-orders/${orderId}/gate-controls`
+    );
+
+    return response.data;
+};
+
+export const approveGateA = async (orderId, data) => {
+    const response = await api.post(
+        `/api/marketing/sales-orders/${orderId}/gate-controls/gate-a-approve`,
+        data
+    );
+
+    return response.data;
+};
+
+export const updatePpsStatus = async (orderId, data) => {
+    const response = await api.patch(
+        `/api/marketing/sales-orders/${orderId}/gate-controls/pps-status`,
+        data
+    );
+
+    return response.data;
+};
+
+export const releaseGateC = async (orderId, data) => {
+    const response = await api.post(
+        `/api/marketing/sales-orders/${orderId}/gate-controls/gate-c-release`,
+        data
+    );
+
+    return response.data;
+};
+
 // ============================================================
 // DUMMY USERS
 // TODO: Replace with real users API when available
 // ============================================================
+
+export const getUserById = async (id) => {
+    const response = await api.get(`/api/marketing/users/${id}`);
+    return response.data;
+};
 
 export const getAllUsers = async () => {
     return {

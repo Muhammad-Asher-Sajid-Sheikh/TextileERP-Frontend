@@ -1,0 +1,582 @@
+/* ============================================================
+   BOM MANAGEMENT MODAL
+============================================================ */
+
+.bom-management-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   MODAL CONTAINER
+============================================================ */
+
+.bom-management-modal {
+    width: min(760px, 100%);
+    max-height: calc(100vh - 48px);
+
+    overflow-y: auto;
+
+    background: #ffffff;
+    color: #172033;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.25),
+        0 8px 20px rgba(15, 23, 42, 0.12);
+
+    padding: 24px;
+
+    box-sizing: border-box;
+
+    opacity: 1;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.bom-management-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+}
+
+.bom-management-header h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.bom-management-header p {
+    margin: 6px 0 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   CLOSE BUTTON
+============================================================ */
+
+.bom-close-btn {
+    border: none;
+    border-radius: 8px;
+
+    background: #eef2f7;
+    color: #172033;
+
+    padding: 9px 15px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+.bom-close-btn:hover {
+    background: #e2e8f0;
+}
+
+
+/* ============================================================
+   SALES ORDER SUMMARY
+============================================================ */
+
+.bom-order-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    padding: 18px;
+
+    margin-bottom: 26px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    box-sizing: border-box;
+}
+
+.bom-summary-item {
+    min-width: 0;
+}
+
+.bom-summary-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.bom-summary-value {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   BOM SECTION HEADER
+============================================================ */
+
+.bom-section-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 16px;
+}
+
+.bom-section-header h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.bom-section-header p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+
+.bom-primary-btn {
+    border: none;
+    border-radius: 8px;
+
+    background: #2563eb;
+    color: #ffffff;
+
+    padding: 10px 16px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+.bom-primary-btn:hover {
+    background: #1d4ed8;
+}
+
+.bom-primary-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bom-secondary-btn {
+    border: 1px solid #d7dee8;
+    border-radius: 8px;
+
+    background: #f1f5f9;
+    color: #172033;
+
+    padding: 9px 15px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.bom-secondary-btn:hover {
+    background: #e2e8f0;
+}
+
+
+/* ============================================================
+   CREATE FORM
+============================================================ */
+
+.bom-create-form {
+    padding: 18px;
+
+    margin-bottom: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.bom-create-form h3 {
+    margin: 0 0 6px;
+
+    color: #172033;
+
+    font-size: 18px;
+}
+
+.bom-create-form > p {
+    margin: 0 0 18px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   FORM GRID
+============================================================ */
+
+.bom-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.bom-form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.bom-form-group label {
+    color: #334155;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.bom-form-group label span {
+    color: #dc2626;
+}
+
+.bom-form-group input {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #172033;
+
+    font-size: 14px;
+
+    outline: none;
+
+    box-sizing: border-box;
+}
+
+.bom-form-group input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* ============================================================
+   FORM ACTIONS
+============================================================ */
+
+.bom-form-actions {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+
+/* ============================================================
+   BOM LIST
+============================================================ */
+
+.bom-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+/* ============================================================
+   BOM CARD
+============================================================ */
+
+.bom-card {
+    padding: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.bom-card:hover {
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+
+/* ============================================================
+   BOM CARD HEADER
+============================================================ */
+
+.bom-card-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 16px;
+}
+
+.bom-card-title {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.bom-card-title h3 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.bom-created-date {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   LATEST VERSION
+============================================================ */
+
+.bom-latest-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: #dcfce7;
+    color: #166534;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* ============================================================
+   BOM DETAILS
+============================================================ */
+
+.bom-details-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+.bom-detail-item {
+    min-width: 0;
+}
+
+.bom-detail-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.bom-detail-value {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   BOM CARD ACTION
+============================================================ */
+
+.bom-card-actions {
+    display: flex;
+
+    justify-content: flex-start;
+
+    padding-top: 2px;
+}
+
+
+/* ============================================================
+   EMPTY / LOADING
+============================================================ */
+
+.bom-loading-state,
+.bom-empty-state {
+    padding: 36px 20px;
+
+    text-align: center;
+
+    color: #64748b;
+
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+
+    background: #f8fafc;
+}
+
+.bom-empty-state h3 {
+    margin: 0 0 6px;
+
+    color: #172033;
+
+    font-size: 17px;
+}
+
+.bom-empty-state p {
+    margin: 0 0 18px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 700px) {
+
+    .bom-management-overlay {
+        padding: 12px;
+    }
+
+    .bom-management-modal {
+        max-height: calc(100vh - 24px);
+
+        padding: 18px;
+    }
+
+    .bom-order-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .bom-details-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .bom-form-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .bom-section-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .bom-card-header {
+        flex-direction: column;
+    }
+}
