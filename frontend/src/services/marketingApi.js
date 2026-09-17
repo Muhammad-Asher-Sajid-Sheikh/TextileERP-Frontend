@@ -535,12 +535,54 @@ export const updateYarnDetail = async (yarnDetailId, data) => {
 };
 
 
+// ============================================================
+// PRODUCTION GATE CONTROL
+// ============================================================
 
+export const getGateControlsByOrderId = async (orderId) => {
+    const response = await api.get(
+        `/api/marketing/sales-orders/${orderId}/gate-controls`
+    );
+
+    return response.data;
+};
+
+export const approveGateA = async (orderId, data) => {
+    const response = await api.post(
+        `/api/marketing/sales-orders/${orderId}/gate-controls/gate-a-approve`,
+        data
+    );
+
+    return response.data;
+};
+
+export const updatePpsStatus = async (orderId, data) => {
+    const response = await api.patch(
+        `/api/marketing/sales-orders/${orderId}/gate-controls/pps-status`,
+        data
+    );
+
+    return response.data;
+};
+
+export const releaseGateC = async (orderId, data) => {
+    const response = await api.post(
+        `/api/marketing/sales-orders/${orderId}/gate-controls/gate-c-release`,
+        data
+    );
+
+    return response.data;
+};
 
 // ============================================================
 // DUMMY USERS
 // TODO: Replace with real users API when available
 // ============================================================
+
+export const getUserById = async (id) => {
+    const response = await api.get(`/api/marketing/users/${id}`);
+    return response.data;
+};
 
 export const getAllUsers = async () => {
     return {

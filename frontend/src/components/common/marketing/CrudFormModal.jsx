@@ -42,16 +42,7 @@ const CrudFormModal = ({
     loading = false,
     onClose,
     onSubmit,
-
-    /*
-     * Optional submit blocking.
-     */
     submitDisabled = false,
-
-    /*
-     * Optional explanation shown above
-     * the footer button.
-     */
     submitDisabledReason = "",
 }) => {
 
@@ -197,7 +188,7 @@ const CrudFormModal = ({
 
                 if (
                     field.type ===
-                        "email" &&
+                    "email" &&
                     formData[
                         field.name
                     ]
@@ -286,6 +277,7 @@ const CrudFormModal = ({
                                 field.name
                             ]
                         ).toISOString();
+
                 }
 
             }
@@ -418,13 +410,87 @@ const CrudFormModal = ({
 
 
             /* ------------------------------------------------
+               RADIO GROUP
+            ------------------------------------------------ */
+
+            case "radio-group":
+
+                return (
+                    <div className="crud-radio-group">
+
+                        <div className="radio-options">
+
+                            {(
+                                field.options ||
+                                []
+                            ).map(
+                                (
+                                    option
+                                ) => (
+
+                                    <label
+                                        key={
+                                            option.value
+                                        }
+
+                                        className="radio-option"
+                                    >
+
+                                        <input
+                                            type="radio"
+
+                                            name={
+                                                field.name
+                                            }
+
+                                            value={
+                                                option.value
+                                            }
+
+                                            checked={
+                                                formData[
+                                                    field.name
+                                                ] ===
+                                                option.value
+                                            }
+
+                                            onChange={
+                                                handleInputChange
+                                            }
+
+                                            disabled={
+                                                loading ||
+                                                mode === "view"
+                                            }
+                                        />
+
+                                        <span>
+                                            {
+                                                option.label
+                                            }
+                                        </span>
+
+                                    </label>
+
+                                )
+                            )}
+
+                        </div>
+
+                    </div>
+                );
+
+
+            /* ------------------------------------------------
                CHECKBOX
             ------------------------------------------------ */
 
             case "checkbox":
 
                 return (
-                    <label className="checkbox-item">
+                    <label
+                        className="checkbox-item"
+                    >
 
                         <input
                             type="checkbox"
@@ -517,6 +583,7 @@ const CrudFormModal = ({
     ======================================================== */
 
     return (
+
         <div
             className="modal-overlay"
 
@@ -548,6 +615,7 @@ const CrudFormModal = ({
 
                     <button
                         type="button"
+
                         className="modal-close-btn"
 
                         onClick={
@@ -576,6 +644,7 @@ const CrudFormModal = ({
 
                     <div className="modal-body">
 
+
                         {/* ==========================================
                            NORMAL FIELDS
                         ========================================== */}
@@ -586,7 +655,9 @@ const CrudFormModal = ({
                                 .filter(
                                     (field) =>
                                         field.type !==
-                                        "checkbox"
+                                            "checkbox" &&
+                                        field.type !==
+                                            "radio-group"
                                 )
                                 .map(
                                     (
@@ -595,18 +666,21 @@ const CrudFormModal = ({
 
                                         <div
                                             className="form-group"
+
                                             key={
                                                 field.name
                                             }
                                         >
 
                                             <label>
+
                                                 {
                                                     field.label
                                                 }
 
                                                 {field.required &&
                                                     " *"}
+
                                             </label>
 
 
@@ -628,6 +702,7 @@ const CrudFormModal = ({
                                                     }
 
                                                 </span>
+
                                             )}
 
                                         </div>
@@ -636,6 +711,66 @@ const CrudFormModal = ({
                                 )}
 
                         </div>
+
+
+                        {/* ==========================================
+                           RADIO GROUP FIELDS
+                        ========================================== */}
+
+                        {fields
+                            .filter(
+                                (field) =>
+                                    field.type ===
+                                    "radio-group"
+                            )
+                            .map(
+                                (
+                                    field
+                                ) => (
+
+                                    <div
+                                        className="radio-section"
+
+                                        key={
+                                            field.name
+                                        }
+                                    >
+
+                                        <h3>
+
+                                            {
+                                                field.sectionTitle ||
+                                                "Options"
+                                            }
+
+                                        </h3>
+
+
+                                        {renderField(
+                                            field
+                                        )}
+
+
+                                        {errors[
+                                            field.name
+                                        ] && (
+
+                                            <span className="form-error">
+
+                                                {
+                                                    errors[
+                                                        field.name
+                                                    ]
+                                                }
+
+                                            </span>
+
+                                        )}
+
+                                    </div>
+
+                                )
+                            )}
 
 
                         {/* ==========================================
@@ -655,6 +790,7 @@ const CrudFormModal = ({
 
                                     <div
                                         className="checkbox-section"
+
                                         key={
                                             field.name
                                         }
@@ -664,6 +800,7 @@ const CrudFormModal = ({
                                             Options
                                         </h3>
 
+
                                         <div className="checkbox-grid">
 
                                             {renderField(
@@ -671,6 +808,7 @@ const CrudFormModal = ({
                                             )}
 
                                         </div>
+
 
                                         {errors[
                                             field.name
@@ -685,6 +823,7 @@ const CrudFormModal = ({
                                                 }
 
                                             </span>
+
                                         )}
 
                                     </div>
@@ -701,10 +840,13 @@ const CrudFormModal = ({
                             submitDisabledReason && (
 
                                 <div className="form-error">
+
                                     {
                                         submitDisabledReason
                                     }
+
                                 </div>
+
                             )}
 
                     </div>
@@ -718,6 +860,7 @@ const CrudFormModal = ({
 
                         <button
                             type="button"
+
                             className="secondary-btn"
 
                             onClick={
@@ -736,6 +879,7 @@ const CrudFormModal = ({
 
                             <button
                                 type="submit"
+
                                 className="primary-btn"
 
                                 disabled={

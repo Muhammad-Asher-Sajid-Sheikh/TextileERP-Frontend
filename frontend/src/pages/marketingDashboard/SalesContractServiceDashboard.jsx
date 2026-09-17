@@ -1221,7 +1221,7 @@ const SalesContractServiceDashboard = () => {
 
     const currentTitle =
         formMode === "add"
-            ? "Create Sales Contract"
+            ? "Sales Contract"
             : formMode === "paymentClearance"
             ? "Payment Clearance"
             : formMode === "signedCopy"

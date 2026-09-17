@@ -24,6 +24,7 @@ import BomManagementModal
 import "../../styles/marketing/partyService/dashboard.css";
 import "../../styles/marketing/salesOrder/salesOrderDetailsModal.css";
 
+import GateControlPanel from "../../components/marketing/salesOrder/GateControlPanel";
 
 /* ============================================================
    SALES ORDER COLUMNS
@@ -1017,9 +1018,12 @@ const SalesOrdersDashboard = () => {
 
             <div className="sales-order-details-header">
 
-                <div>
+                <div className="sales-orders-page-title">
 
-                    <h1>
+                    <h1 style={{
+                        color: "#1f2937",
+                        fontSize: "32px",
+                    }}>
                         Sales Orders
                     </h1>
 
@@ -1029,21 +1033,22 @@ const SalesOrdersDashboard = () => {
                         production readiness.
                     </p>
 
+
+
+                    <button
+                        className="primary-btn"
+                        onClick={
+                            openActivateModal
+                        }
+                        disabled={
+                            loading ||
+                            contractsLoading
+                        }
+                    >
+                        Activate Sales Order
+                    </button>
+
                 </div>
-
-
-                <button
-                    className="primary-btn"
-                    onClick={
-                        openActivateModal
-                    }
-                    disabled={
-                        loading ||
-                        contractsLoading
-                    }
-                >
-                    Activate Sales Order
-                </button>
 
             </div>
 
@@ -1340,7 +1345,7 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
 
-                                <div className="sales-order-detail-item"> 
+                                <div className="sales-order-detail-item">
 
                                     <strong>
                                         Management Shipment Target
@@ -1449,6 +1454,9 @@ const SalesOrdersDashboard = () => {
                                 </div>
 
                             </div>
+                            <GateControlPanel
+                                salesOrder={selectedSalesOrder}
+                            />
 
                         </div>
 
