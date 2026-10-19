@@ -9,12 +9,14 @@ const CrudTable = ({
     onView,
     onEdit,
     onDelete,
+    onBom,
 }) => {
+
     if (loading) {
         return (
             <div className="dashboard-table-wrapper">
                 <div className="dashboard-empty-state">
-                    Loading parties...
+                    Loading...
                 </div>
             </div>
         );
@@ -32,9 +34,12 @@ const CrudTable = ({
 
     return (
         <div className="dashboard-table-wrapper">
+
             <table className="dashboard-table">
+
                 <thead>
                     <tr>
+
                         {columns.map((column) => (
                             <th key={column.key}>
                                 {column.label}
@@ -44,10 +49,12 @@ const CrudTable = ({
                         <th className="actions-column">
                             Actions
                         </th>
+
                     </tr>
                 </thead>
 
                 <tbody>
+
                     {data.map((item) => (
                         <CrudRow
                             key={item.id}
@@ -56,10 +63,14 @@ const CrudTable = ({
                             onView={onView}
                             onEdit={onEdit}
                             onDelete={onDelete}
+                            onBom={onBom}
                         />
                     ))}
+
                 </tbody>
+
             </table>
+
         </div>
     );
 };

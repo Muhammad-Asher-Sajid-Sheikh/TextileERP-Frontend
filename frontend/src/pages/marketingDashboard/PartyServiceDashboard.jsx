@@ -3,6 +3,7 @@ import React, {
     useMemo,
     useState,
 } from "react";
+
 import { toast } from "react-toastify";
 
 import {
@@ -19,6 +20,11 @@ import CrudFormModal from "../../components/common/marketing/CrudFormModal";
 import ViewPartyDrawer from "../../components/marketing/partyService/ViewPartyDrawer";
 
 import "../../styles/marketing/partyService/dashboard.css";
+
+
+/* ============================================================
+   TABLE COLUMNS
+============================================================ */
 
 const columns = [
     {
@@ -43,15 +49,28 @@ const columns = [
     },
 ];
 
+
+/* ============================================================
+   PARTY SERVICE DASHBOARD
+============================================================ */
+
 const PartyServiceDashboard = () => {
 
-    const [parties, setParties] = useState([]);
+    /* ========================================================
+       STATE
+    ======================================================== */
 
-    const [loading, setLoading] = useState(false);
+    const [parties, setParties] =
+        useState([]);
 
-    const [formLoading, setFormLoading] = useState(false);
+    const [loading, setLoading] =
+        useState(false);
 
-    const [searchTerm, setSearchTerm] = useState("");
+    const [formLoading, setFormLoading] =
+        useState(false);
+
+    const [searchTerm, setSearchTerm] =
+        useState("");
 
     const [selectedParty, setSelectedParty] =
         useState(null);
@@ -65,8 +84,12 @@ const PartyServiceDashboard = () => {
     const [formMode, setFormMode] =
         useState("add");
 
-    const partyFields =
-    [
+
+    /* ========================================================
+       PARTY FORM FIELDS
+    ======================================================== */
+
+    const partyFields = [
         {
             name: "partyCode",
             label: "Party Code",
@@ -74,6 +97,7 @@ const PartyServiceDashboard = () => {
             required: true,
             placeholder: "PRT-001",
         },
+
         {
             name: "legalName",
             label: "Legal Name",
@@ -81,13 +105,15 @@ const PartyServiceDashboard = () => {
             required: true,
             placeholder: "ABC Textiles Ltd.",
         },
+
         {
             name: "country",
             label: "Country",
-            type: "text", // Later you can change this to "select"
+            type: "text",
             required: true,
             placeholder: "Pakistan",
         },
+
         {
             name: "contactEmail",
             label: "Contact Email",
@@ -95,36 +121,51 @@ const PartyServiceDashboard = () => {
             required: true,
             placeholder: "contact@company.com",
         },
+
+        /* ====================================================
+           PARTY ROLE
+        ==================================================== */
+
         {
-            name: "isCustomer",
-            label: "Customer",
-            type: "checkbox",
-        },
-        {
-            name: "isLegalBuyer",
-            label: "Legal Buyer",
-            type: "checkbox",
-        },
-        {
-            name: "isPaymentRemitter",
-            label: "Payment Remitter",
-            type: "checkbox",
-        },
-        {
-            name: "isConsignee",
-            label: "Consignee",
-            type: "checkbox",
-        },
-        {
-            name: "isUltimateClient",
-            label: "Ultimate Client",
-            type: "checkbox",
+            name: "partyType",
+            label: "Party Type",
+            type: "radio-group",
+            sectionTitle: "Options",
+            required: true,
+
+            options: [
+                {
+                    value: "CUSTOMER",
+                    label: "Customer",
+                },
+
+                {
+                    value: "LEGAL_BUYER",
+                    label: "Legal Buyer",
+                },
+
+                {
+                    value: "PAYMENT_REMITTER",
+                    label: "Payment Remitter",
+                },
+
+                {
+                    value: "CONSIGNEE",
+                    label: "Consignee",
+                },
+
+                {
+                    value: "ULTIMATE_CLIENT",
+                    label: "Ultimate Client",
+                },
+            ],
         },
     ];
 
-    /* =======================================================
+
+    /* ========================================================
        LOAD ALL PARTIES
-    ======================================================= */
+    ======================================================== */
 
     const loadParties = async () => {
 
@@ -135,7 +176,9 @@ const PartyServiceDashboard = () => {
             const response =
                 await getAllParties();
 
-            setParties(response.data || []);
+            setParties(
+                response.data || []
+            );
 
         } catch (error) {
 
@@ -150,8 +193,8 @@ const PartyServiceDashboard = () => {
             setLoading(false);
 
         }
-
     };
+
 
     useEffect(() => {
 
@@ -159,45 +202,121 @@ const PartyServiceDashboard = () => {
 
     }, []);
 
-    /* =======================================================
+
+    /* ========================================================
        SEARCH
-    ======================================================= */
+    ======================================================== */
 
     const filteredParties = useMemo(() => {
 
-        if (!searchTerm.trim())
+        if (!searchTerm.trim()) {
             return parties;
+        }
 
         const keyword =
-            searchTerm.toLowerCase();
+            searchTerm
+                .toLowerCase()
+                .trim();
 
-        return parties.filter((party) =>
+        return parties.filter(
+            (party) =>
 
-            party.partyCode
-                ?.toLowerCase()
-                .includes(keyword) ||
+                party.partyCode
+                    ?.toLowerCase()
+                    .includes(keyword) ||
 
-            party.legalName
-                ?.toLowerCase()
-                .includes(keyword) ||
+                party.legalName
+                    ?.toLowerCase()
+                    .includes(keyword) ||
 
-            party.country
-                ?.toLowerCase()
-                .includes(keyword) ||
+                party.country
+                    ?.toLowerCase()
+                    .includes(keyword) ||
 
-            party.contactEmail
-                ?.toLowerCase()
-                .includes(keyword)
-
+                party.contactEmail
+                    ?.toLowerCase()
+                    .includes(keyword)
         );
 
-        
+    }, [
+        parties,
+        searchTerm,
+    ]);
 
-    }, [parties, searchTerm]);
 
-    /* =======================================================
+    /* ========================================================
+       CONVERT DATABASE PARTY → FORM DATA
+       
+       Database:
+       
+       isCustomer
+       isLegalBuyer
+       isPaymentRemitter
+       isConsignee
+       isUltimateClient
+       
+       Form:
+       
+       partyType
+    ======================================================== */
+
+    const getPartyFormData = (
+        party
+    ) => {
+
+        if (!party) {
+            return null;
+        }
+
+        let partyType = "";
+
+
+        if (party.isCustomer) {
+
+            partyType =
+                "CUSTOMER";
+
+        } else if (
+            party.isLegalBuyer
+        ) {
+
+            partyType =
+                "LEGAL_BUYER";
+
+        } else if (
+            party.isPaymentRemitter
+        ) {
+
+            partyType =
+                "PAYMENT_REMITTER";
+
+        } else if (
+            party.isConsignee
+        ) {
+
+            partyType =
+                "CONSIGNEE";
+
+        } else if (
+            party.isUltimateClient
+        ) {
+
+            partyType =
+                "ULTIMATE_CLIENT";
+
+        }
+
+
+        return {
+            ...party,
+            partyType,
+        };
+    };
+
+
+    /* ========================================================
        ADD
-    ======================================================= */
+    ======================================================== */
 
     const handleAdd = () => {
 
@@ -209,11 +328,14 @@ const PartyServiceDashboard = () => {
 
     };
 
-    /* =======================================================
-       EDIT
-    ======================================================= */
 
-    const handleEdit = async (party) => {
+    /* ========================================================
+       EDIT
+    ======================================================== */
+
+    const handleEdit = async (
+        party
+    ) => {
 
         try {
 
@@ -224,8 +346,20 @@ const PartyServiceDashboard = () => {
                     party.id
                 );
 
+
+            /*
+             * Convert the existing
+             * database booleans into
+             * the radio-group value.
+             */
+            const formData =
+                getPartyFormData(
+                    response.data
+                );
+
+
             setSelectedParty(
-                response.data
+                formData
             );
 
             setFormMode("edit");
@@ -245,14 +379,16 @@ const PartyServiceDashboard = () => {
             setLoading(false);
 
         }
-
     };
 
-    /* =======================================================
-       VIEW
-    ======================================================= */
 
-    const handleView = async (party) => {
+    /* ========================================================
+       VIEW
+    ======================================================== */
+
+    const handleView = async (
+        party
+    ) => {
 
         try {
 
@@ -282,22 +418,27 @@ const PartyServiceDashboard = () => {
             setLoading(false);
 
         }
-
     };
 
-    /* =======================================================
-       DELETE
-    ======================================================= */
 
-    const handleDelete = async (party) => {
+    /* ========================================================
+       DELETE
+    ======================================================== */
+
+    const handleDelete = async (
+        party
+    ) => {
 
         const confirmed =
             window.confirm(
                 `Delete "${party.legalName}"?`
             );
 
-        if (!confirmed)
+
+        if (!confirmed) {
             return;
+        }
+
 
         try {
 
@@ -307,11 +448,13 @@ const PartyServiceDashboard = () => {
                 party.id
             );
 
+
             toast.success(
                 "Party deleted successfully."
             );
 
-            loadParties();
+
+            await loadParties();
 
         } catch (error) {
 
@@ -326,44 +469,124 @@ const PartyServiceDashboard = () => {
             setLoading(false);
 
         }
-
     };
 
-    /* =======================================================
-       SUBMIT
-    ======================================================= */
 
-    const handleSubmit =
-        async (formData) => {
+    /* ========================================================
+       SUBMIT
+       
+       Convert:
+       
+       partyType: "CUSTOMER"
+       
+       into:
+       
+       isCustomer: true
+       isLegalBuyer: false
+       isPaymentRemitter: false
+       isConsignee: false
+       isUltimateClient: false
+    ======================================================== */
+
+    const handleSubmit = async (
+        formData
+    ) => {
 
         try {
 
             setFormLoading(true);
+
+
+            /* ==================================================
+               BUILD BACKEND PAYLOAD
+            ================================================== */
+
+            const payload = {
+
+                /*
+                 * Keep the normal fields.
+                 */
+                partyCode:
+                    formData.partyCode,
+
+                legalName:
+                    formData.legalName,
+
+                country:
+                    formData.country,
+
+                contactEmail:
+                    formData.contactEmail,
+
+
+                /*
+                 * Convert radio selection
+                 * to existing boolean fields.
+                 */
+                isCustomer:
+                    formData.partyType ===
+                    "CUSTOMER",
+
+                isLegalBuyer:
+                    formData.partyType ===
+                    "LEGAL_BUYER",
+
+                isPaymentRemitter:
+                    formData.partyType ===
+                    "PAYMENT_REMITTER",
+
+                isConsignee:
+                    formData.partyType ===
+                    "CONSIGNEE",
+
+                isUltimateClient:
+                    formData.partyType ===
+                    "ULTIMATE_CLIENT",
+            };
+
+
+            /* ==================================================
+               CREATE
+            ================================================== */
 
             if (
                 formMode === "add"
             ) {
 
                 await createParty(
-                    formData
+                    payload
                 );
+
 
                 toast.success(
                     "Party created successfully."
                 );
 
-            } else {
+            }
+
+
+            /* ==================================================
+               UPDATE
+            ================================================== */
+
+            else {
 
                 await updateParty(
                     selectedParty.id,
-                    formData
+                    payload
                 );
+
 
                 toast.success(
                     "Party updated successfully."
                 );
 
             }
+
+
+            /* ==================================================
+               CLOSE FORM
+            ================================================== */
 
             setShowFormModal(
                 false
@@ -373,7 +596,12 @@ const PartyServiceDashboard = () => {
                 null
             );
 
-            loadParties();
+
+            /* ==================================================
+               REFRESH TABLE
+            ================================================== */
+
+            await loadParties();
 
         } catch (error) {
 
@@ -392,66 +620,160 @@ const PartyServiceDashboard = () => {
             );
 
         }
-
     };
 
-        return (
+
+    /* ========================================================
+       RENDER
+    ======================================================== */
+
+    return (
+
         <div className="dashboard-container">
 
             <div className="dashboard-content">
 
+
+                {/* ==================================================
+                   TOOLBAR
+                ================================================== */}
+
                 <CrudToolbar
                     title="Party Service"
-                    searchTerm={searchTerm}
-                    onSearch={setSearchTerm}
-                    onAdd={handleAdd}
+
+                    searchTerm={
+                        searchTerm
+                    }
+
+                    onSearch={
+                        setSearchTerm
+                    }
+
+                    onAdd={
+                        handleAdd
+                    }
+
                     addButtonText="Add Party"
-                    loading={loading}
+
+                    loading={
+                        loading
+                    }
                 />
 
+
+                {/* ==================================================
+                   TABLE
+                ================================================== */}
+
                 <CrudTable
-                    columns={columns}
-                    data={filteredParties}
-                    loading={loading}
-                    onView={handleView}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                    columns={
+                        columns
+                    }
+
+                    data={
+                        filteredParties
+                    }
+
+                    loading={
+                        loading
+                    }
+
+                    onView={
+                        handleView
+                    }
+
+                    onEdit={
+                        handleEdit
+                    }
+
+                    onDelete={
+                        handleDelete
+                    }
                 />
 
             </div>
 
+
+            {/* ======================================================
+               ADD / EDIT MODAL
+            ====================================================== */}
+
             <CrudFormModal
+
                 title="Party"
-                fields={partyFields}
-                isOpen={showFormModal}
-                mode={formMode}
-                initialData={selectedParty}
-                loading={formLoading}
+
+                fields={
+                    partyFields
+                }
+
+                isOpen={
+                    showFormModal
+                }
+
+                mode={
+                    formMode
+                }
+
+                initialData={
+                    selectedParty
+                }
+
+                loading={
+                    formLoading
+                }
+
                 onClose={() => {
 
-                    if (formLoading) return;
+                    if (formLoading) {
+                        return;
+                    }
 
-                    setShowFormModal(false);
-                    setSelectedParty(null);
+                    setShowFormModal(
+                        false
+                    );
+
+                    setSelectedParty(
+                        null
+                    );
 
                 }}
-                onSubmit={handleSubmit}
+
+                onSubmit={
+                    handleSubmit
+                }
             />
 
+
+            {/* ======================================================
+               VIEW DRAWER
+            ====================================================== */}
+
             <ViewPartyDrawer
-                isOpen={showDrawer}
-                party={selectedParty}
+
+                isOpen={
+                    showDrawer
+                }
+
+                party={
+                    selectedParty
+                }
+
                 onClose={() => {
 
-                    setShowDrawer(false);
-                    setSelectedParty(null);
+                    setShowDrawer(
+                        false
+                    );
+
+                    setSelectedParty(
+                        null
+                    );
 
                 }}
             />
 
         </div>
     );
-
 };
+
 
 export default PartyServiceDashboard;

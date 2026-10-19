@@ -35,7 +35,7 @@ import "../../styles/marketing/partyService/dashboard.css";
 
 const DUMMY_USERS = [
             {
-                id: "bb051c54-65a0-47c9-a84b-bbd77385e8b8",
+                id: "2d2830c9-5421-47e7-9b93-33547596f22d",
                 name: "Ahmed Khan",
                 email: "ahmed@example.com",
             },
@@ -1221,7 +1221,7 @@ const SalesContractServiceDashboard = () => {
 
     const currentTitle =
         formMode === "add"
-            ? "Create Sales Contract"
+            ? "Sales Contract"
             : formMode === "paymentClearance"
             ? "Payment Clearance"
             : formMode === "signedCopy"
